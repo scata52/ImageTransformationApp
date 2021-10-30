@@ -67,7 +67,7 @@
          </font>
       </Label>
       <CheckBox layoutX="262.0" layoutY="257.0" mnemonicParsing="false" text="Entropy" />
-      <CheckBox layoutX="406.0" layoutY="257.0" mnemonicParsing="false" text="Randomness" />
+      <CheckBox layoutX="419.0" layoutY="257.0" mnemonicParsing="false" text="Randomness" />
       <CheckBox layoutX="595.0" layoutY="257.0" mnemonicParsing="false" text="Stability" />
       <Button layoutX="451.0" layoutY="388.0" mnemonicParsing="false" prefHeight="31.0" prefWidth="102.0" text="Transform">
          <font>

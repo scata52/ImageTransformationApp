@@ -7,16 +7,15 @@
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.text.Font?>
 
-
-<AnchorPane prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.demo.ImageTransformationController">
+<AnchorPane prefHeight="274.0" prefWidth="289.0" xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.demo.ImageTransformationController">
    <children>
-      <Button layoutX="257.0" layoutY="164.0" mnemonicParsing="false" onAction="#switchToBasicView" prefHeight="27.0" prefWidth="69.0" text="Basic">
+      <Button layoutX="115.0" layoutY="93.0" mnemonicParsing="false" onAction="#switchToBasicView" prefHeight="27.0" prefWidth="69.0" text="Basic">
          <font>
             <Font size="13.0" />
          </font>
       </Button>
-      <Button layoutX="257.0" layoutY="236.0" mnemonicParsing="false" onAction="#switchToAdvancedView" text="Advanced" />
-      <MenuBar prefHeight="25.0" prefWidth="600.0">
+      <Button layoutX="115.0" layoutY="177.0" mnemonicParsing="false" onAction="#switchToAdvancedView" text="Advanced" />
+      <MenuBar prefHeight="25.0" prefWidth="298.0">
         <menus>
           <Menu mnemonicParsing="false" text="File">
             <items>
