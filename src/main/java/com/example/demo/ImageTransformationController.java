@@ -7,17 +7,18 @@ import javafx.fxml.Initializable;
 import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
-import javafx.scene.control.Button;
 import javafx.scene.control.ChoiceBox;
 import javafx.scene.control.ListView;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 
-import java.io.File;
-import java.io.IOException;
+import java.io.*;
 import java.net.URL;
+import java.util.List;
 import java.util.Objects;
 import java.util.ResourceBundle;
+import java.util.concurrent.*;
+import java.util.stream.Collectors;
 
 public class ImageTransformationController implements Initializable{
 
@@ -29,13 +30,14 @@ public class ImageTransformationController implements Initializable{
     @FXML
     private ChoiceBox<String> choiceBox;
 
-    private final String[] transformationTypes = {"Gabor Transformation", "k-Wavelet Transformation"};
-
     @FXML
     private ListView<String> inputFilePath;
 
     @FXML
     private ListView<String> outputFilePath;
+
+    private final String[] transformationTypes = {"Gabor Transformation", "k-Wavelet Transformation"};
+    private final String[] commands = {"octave-cli"};
 
 
     public void switchToMainView(ActionEvent event) throws IOException {
@@ -68,8 +70,61 @@ public class ImageTransformationController implements Initializable{
         }
     }
 
+    public void startTransform(ActionEvent event) throws IOException {
+        ProcessBuilder builder = new ProcessBuilder();
+        builder.command(commands);
+        builder.redirectErrorStream(true);
+
+        Process process;
+        try {
+            process = builder.start();
+
+            BufferedWriter writer = new BufferedWriter(new OutputStreamWriter(process.getOutputStream ()));
+            BufferedReader br = new BufferedReader(new InputStreamReader(process.getInputStream()));
+
+            // Check that Octave is really running and streams are read from / written to
+            writer.write("1+1");
+            writer.newLine();
+
+            // Try to plot
+            /*writer.write("plot(sin(0:0.1:2*pi))");
+            writer.newLine();*/
+
+            writer.write("2+2");
+            writer.newLine();
+
+            writer.flush();
+
+            String line;
+            while ((line = br.readLine()) != null)
+            {
+                System.out.println(line);
+            }
+
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+    }
+
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
         choiceBox.getItems().addAll(transformationTypes);
     }
+
+    /*private static class ProcessReadTask implements Callable<List<String>> {
+
+        private InputStream inputStream;
+
+        public ProcessReadTask(InputStream inputStream) {
+            this.inputStream = inputStream;
+        }
+
+        @Override
+        public List<String> call() {
+            return new BufferedReader(new InputStreamReader(inputStream))
+                    .lines()
+                    .collect(Collectors.toList());
+        }
+    }*/
 }
