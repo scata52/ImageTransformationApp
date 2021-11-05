@@ -7,6 +7,7 @@ import javafx.fxml.Initializable;
 import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
+import javafx.scene.control.Button;
 import javafx.scene.control.ChoiceBox;
 import javafx.scene.control.ListView;
 import javafx.stage.FileChooser;
@@ -22,10 +23,6 @@ import java.util.stream.Collectors;
 
 public class ImageTransformationController implements Initializable{
 
-    private Stage stage;
-    private Scene scene;
-    private Parent root;
-
 
     @FXML
     private ChoiceBox<String> choiceBox;
@@ -36,14 +33,23 @@ public class ImageTransformationController implements Initializable{
     @FXML
     private ListView<String> outputFilePath;
 
-    private final String[] transformationTypes = {"Gabor Transformation", "k-Wavelet Transformation"};
+    private final String[] transformationTypes = {"Gabor Transformation", "Wavelet Transformation", "Apply All"};
     private final String[] commands = {"octave-cli"};
+
+    static void launchMainView(Stage stage) throws IOException {
+        Parent root = FXMLLoader.load(Objects.requireNonNull(ImageTransformation.class.getResource(
+                "main_view.fxml")));
+        Scene scene = new Scene(root);
+        stage.setTitle("Image Transformation");
+        stage.setScene(scene);
+        stage.show();
+    }
 
 
     public void switchToMainView(ActionEvent event) throws IOException {
-        root = FXMLLoader.load(Objects.requireNonNull(ImageTransformation.class.getResource("main_view.fxml")));
-        stage = (Stage) ((Node)event.getSource()).getScene().getWindow();
-        scene = new Scene(root);
+        Parent root = FXMLLoader.load(Objects.requireNonNull(ImageTransformation.class.getResource("main_view.fxml")));
+        Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
+        Scene scene = new Scene(root);
         stage.setScene(scene);
         stage.show();
     }
@@ -70,6 +76,15 @@ public class ImageTransformationController implements Initializable{
         }
     }
 
+    public void startParameterView(ActionEvent event) throws IOException {
+        Parent root = FXMLLoader.load(Objects.requireNonNull(ImageTransformation.class.getResource("parameters_view.fxml")));
+        Stage stage = new Stage();
+        stage.setTitle("Set Parameters");
+        Scene scene = new Scene(root);
+        stage.setScene(scene);
+        stage.show();
+    }
+
     public void startTransform(ActionEvent event) throws IOException {
         ProcessBuilder builder = new ProcessBuilder();
         builder.command(commands);
@@ -87,8 +102,8 @@ public class ImageTransformationController implements Initializable{
             writer.newLine();
 
             // Try to plot
-            /*writer.write("plot(sin(0:0.1:2*pi))");
-            writer.newLine();*/
+            writer.write("plot([1,2,3,4])");
+            writer.newLine();
 
             writer.write("2+2");
             writer.newLine();

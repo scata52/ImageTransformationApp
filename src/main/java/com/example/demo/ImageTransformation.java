@@ -11,19 +11,19 @@ import java.util.Objects;
 
 public class ImageTransformation extends Application {
 
-    private void launchMainView(Stage stage) throws IOException {
+    /*private void launchMainView(Stage stage) throws IOException {
         Parent root = FXMLLoader.load(Objects.requireNonNull(ImageTransformation.class.getResource(
                 "main_view.fxml")));
         Scene scene = new Scene(root);
         stage.setTitle("Image Transformation");
         stage.setScene(scene);
         stage.show();
-    }
+    }*/
 
 
     @Override
     public void start(Stage stage) throws IOException {
-        launchMainView(stage);
+        ImageTransformationController.launchMainView(stage);
     }
 
     public static void main(String[] args) {
