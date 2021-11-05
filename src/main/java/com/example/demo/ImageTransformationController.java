@@ -33,7 +33,7 @@ public class ImageTransformationController implements Initializable{
     @FXML
     private ListView<String> outputFilePath;
 
-    private final String[] transformationTypes = {"Gabor Transformation", "Wavelet Transformation", "Apply All"};
+    private final String[] transformationTypes = {"Gabor Transformation", "Apply All"};
     private final String[] commands = {"octave-cli"};
 
     static void launchMainView(Stage stage) throws IOException {
