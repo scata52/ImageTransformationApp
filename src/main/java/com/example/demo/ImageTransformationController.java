@@ -33,8 +33,10 @@ public class ImageTransformationController implements Initializable{
     @FXML
     private ListView<String> outputFilePath;
 
+    private String selectedFileName;
+
     private final String[] transformationTypes = {"Gabor Transformation", "Apply All"};
-    private final String[] commands = {"octave-cli"};
+    private final String[] commands = {"octave-cli"}; // "cmd.exe", "/k", "start",
 
     static void launchMainView(Stage stage) throws IOException {
         Parent root = FXMLLoader.load(Objects.requireNonNull(ImageTransformation.class.getResource(
@@ -59,7 +61,8 @@ public class ImageTransformationController implements Initializable{
         File selectedFile = fileChooser.showOpenDialog(null);
 
         if (selectedFile != null) {
-            inputFilePath.getItems().add(selectedFile.getAbsolutePath());
+            selectedFileName = selectedFile.getName();
+            inputFilePath.getItems().add(selectedFileName);
         } else {
             System.out.println("File not valid!");
         }
@@ -88,6 +91,7 @@ public class ImageTransformationController implements Initializable{
     public void startTransform(ActionEvent event) throws IOException {
         ProcessBuilder builder = new ProcessBuilder();
         builder.command(commands);
+        builder.directory(new File("C:\\Users\\Cem Atalay\\Desktop\\Test (1)"));
         builder.redirectErrorStream(true);
 
         Process process;
@@ -97,15 +101,20 @@ public class ImageTransformationController implements Initializable{
             BufferedWriter writer = new BufferedWriter(new OutputStreamWriter(process.getOutputStream ()));
             BufferedReader br = new BufferedReader(new InputStreamReader(process.getInputStream()));
 
-            // Check that Octave is really running and streams are read from / written to
-            writer.write("1+1");
+
+            writer.write("pkg load ltfat");
             writer.newLine();
 
-            // Try to plot
-            writer.write("plot([1,2,3,4])");
+            writer.write("imagetransform(\""+selectedFileName+"\",\"gabor\",1)");
             writer.newLine();
 
-            writer.write("2+2");
+//            writer.write("plot([1,2,3])");
+//            writer.newLine();
+
+            writer.write("print -djpg Transformed_Image.jpg");
+            writer.newLine();
+
+            writer.write("quit");
             writer.newLine();
 
             writer.flush();
