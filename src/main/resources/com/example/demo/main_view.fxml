@@ -4,41 +4,40 @@
 <?import javafx.scene.control.CheckBox?>
 <?import javafx.scene.control.ChoiceBox?>
 <?import javafx.scene.control.Label?>
-<?import javafx.scene.control.ListView?>
+<?import javafx.scene.control.TextArea?>
+<?import javafx.scene.control.TextField?>
 <?import javafx.scene.control.Tooltip?>
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.text.Font?>
 
-<AnchorPane prefHeight="329.0" prefWidth="779.0" xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.demo.ImageTransformationController">
+<AnchorPane prefHeight="355.0" prefWidth="779.0" xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.demo.ImageTransformationController">
    <children>
       <Label layoutX="36.0" layoutY="42.0" text="Raw Data:">
          <font>
             <Font size="18.0" />
          </font>
       </Label>
-      <Label layoutX="36.0" layoutY="196.0" text="Output Path:">
+      <Label layoutX="36.0" layoutY="245.0" text="Output Path:">
          <font>
             <Font size="18.0" />
          </font>
       </Label>
-      <Button fx:id="chooseInputFileBTN" layoutX="262.0" layoutY="43.0" mnemonicParsing="false" onAction="#chooseInputFiles" text="Choose File">
+      <Button fx:id="chooseInputFileBTN" layoutX="247.0" layoutY="43.0" mnemonicParsing="false" onAction="#chooseInputFiles" text="Choose File">
          <tooltip>
             <Tooltip text="Choose an image or a file of images to be transformed and analyzed. " />
          </tooltip></Button>
-      <Button fx:id="chooseOutputFileBTN" layoutX="262.0" layoutY="197.0" mnemonicParsing="false" onAction="#chooseOutputFiles" text="Choose File">
+      <Button fx:id="chooseOutputFileBTN" layoutX="247.0" layoutY="246.0" mnemonicParsing="false" onAction="#chooseOutputFiles" text="Choose File">
          <tooltip>
             <Tooltip text="Choose where you want the transformed files to be stored." />
          </tooltip></Button>
-      <ListView fx:id="inputFilePath" layoutX="390.0" layoutY="37.0" prefHeight="37.0" prefWidth="352.0" />
-      <ListView fx:id="outputFilePath" layoutX="390.0" layoutY="191.0" prefHeight="37.0" prefWidth="352.0" />
       <Label layoutX="36.0" layoutY="92.0" text="Transformation Type:">
          <font>
             <Font size="18.0" />
          </font>
       </Label>
-      <Button layoutX="540.0" layoutY="90.0" mnemonicParsing="false" onAction="#startParameterView" prefHeight="31.0" prefWidth="149.0" text="Set Parameters">
+      <Button fx:id="useTTypeDValuesBTN" layoutX="640.0" layoutY="93.0" mnemonicParsing="false" onAction="#setDefaultTTypeValues" prefHeight="25.0" prefWidth="102.0" text="Use Default Values">
          <font>
-            <Font size="15.0" />
+            <Font size="10.0" />
          </font>
          <tooltip>
             <Tooltip text="Set the parameters for the selected transformation type and the desired analyses.">
@@ -48,22 +47,43 @@
             </Tooltip>
          </tooltip>
       </Button>
-      <Label layoutX="36.0" layoutY="140.0" text="Analysis:">
+      <Label layoutX="36.0" layoutY="147.0" text="Analysis:">
          <font>
             <Font size="18.0" />
          </font>
       </Label>
-      <CheckBox layoutX="262.0" layoutY="145.0" mnemonicParsing="false" text="Entropy" />
-      <CheckBox layoutX="413.0" layoutY="145.0" mnemonicParsing="false" text="Randomness" />
-      <CheckBox layoutX="583.0" layoutY="145.0" mnemonicParsing="false" text="Stability" />
-      <Button fx:id="transformBTN" cache="true" defaultButton="true" layoutX="339.0" layoutY="264.0" mnemonicParsing="false" onAction="#startTransform" prefHeight="31.0" prefWidth="102.0" text="Transform">
+      <CheckBox layoutX="255.0" layoutY="153.0" mnemonicParsing="false" text="Entropy" />
+      <CheckBox layoutX="404.0" layoutY="153.0" mnemonicParsing="false" text="Randomness" />
+      <CheckBox layoutX="560.0" layoutY="153.0" mnemonicParsing="false" text="Stability" />
+      <Button fx:id="transformBTN" cache="true" defaultButton="true" layoutX="339.0" layoutY="297.0" mnemonicParsing="false" onAction="#startTransform" prefHeight="31.0" prefWidth="102.0" text="Transform">
          <font>
             <Font size="15.0" />
          </font>
       </Button>
-      <ChoiceBox fx:id="choiceBox" layoutX="262.0" layoutY="93.0" prefHeight="25.0" prefWidth="195.0" value="Gabor Transformation">
+      <ChoiceBox fx:id="choiceBox" layoutX="247.0" layoutY="93.0" prefHeight="25.0" prefWidth="157.0" value="Gabor Transformation">
          <tooltip>
             <Tooltip text="Choose the transformation type to be applied." />
          </tooltip></ChoiceBox>
+      <TextArea fx:id="selectedFileText" layoutX="390.0" layoutY="37.0" prefHeight="37.0" prefWidth="352.0" />
+      <TextField fx:id="TTypeSizeField" layoutX="441.0" layoutY="93.0" prefHeight="25.0" prefWidth="62.0" />
+      <TextField fx:id="TTypeDepthField" layoutX="561.0" layoutY="93.0" prefHeight="25.0" prefWidth="62.0" />
+      <Label layoutX="412.0" layoutY="97.0" text="size:" />
+      <Label layoutX="518.0" layoutY="97.0" text="depth:" />
+      <TextField fx:id="EntropyField" layoutX="255.0" layoutY="187.0" prefHeight="25.0" prefWidth="62.0" />
+      <TextField fx:id="RandomnessField" layoutX="410.0" layoutY="187.0" prefHeight="25.0" prefWidth="62.0" />
+      <TextField fx:id="StabilityField" layoutX="561.0" layoutY="187.0" prefHeight="25.0" prefWidth="62.0" />
+      <Button fx:id="useAnalysisDValuesBTN" layoutX="640.0" layoutY="187.0" mnemonicParsing="false" onAction="#setDefaultAnalysisValues" prefHeight="25.0" prefWidth="102.0" text="Use Default Values">
+         <font>
+            <Font size="10.0" />
+         </font>
+         <tooltip>
+            <Tooltip text="Set the parameters for the selected transformation type and the desired analyses.">
+               <font>
+                  <Font size="10.0" />
+               </font>
+            </Tooltip>
+         </tooltip>
+      </Button>
+      <TextArea fx:id="outputFolderText" layoutX="390.0" layoutY="240.0" prefHeight="37.0" prefWidth="352.0" />
    </children>
 </AnchorPane>

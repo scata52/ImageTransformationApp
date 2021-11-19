@@ -7,9 +7,8 @@ import javafx.fxml.Initializable;
 import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
-import javafx.scene.control.Button;
-import javafx.scene.control.ChoiceBox;
-import javafx.scene.control.ListView;
+import javafx.scene.control.*;
+import javafx.stage.DirectoryChooser;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 
@@ -28,14 +27,29 @@ public class ImageTransformationController implements Initializable{
     private ChoiceBox<String> choiceBox;
 
     @FXML
-    private ListView<String> inputFilePath;
+    private TextArea selectedFileText;
 
     @FXML
-    private ListView<String> outputFilePath;
+    private TextArea outputFolderText;
+
+    @FXML
+    private TextField TTypeSizeField;
+
+    @FXML
+    private TextField TTypeDepthField;
+
+    @FXML
+    private TextField EntropyField;
+
+    @FXML
+    private TextField StabilityField;
+
+    @FXML
+    private TextField RandomnessField;
 
     private String selectedFileName;
 
-    private final String[] transformationTypes = {"Gabor Transformation", "Apply All"};
+    private final String[] transformationTypes = {"Gabor Transformation", "Daubechies wavelet", "B-spline wavelet", "Apply All"};
     private final String[] commands = {"octave-cli"}; // "cmd.exe", "/k", "start",
 
     static void launchMainView(Stage stage) throws IOException {
@@ -62,31 +76,33 @@ public class ImageTransformationController implements Initializable{
 
         if (selectedFile != null) {
             selectedFileName = selectedFile.getName();
-            inputFilePath.getItems().add(selectedFileName);
+            selectedFileText.setText(selectedFileName);
         } else {
             System.out.println("File not valid!");
         }
     }
 
     public void chooseOutputFiles(ActionEvent event) {
-        FileChooser fileChooser = new FileChooser();
-        File selectedFile = fileChooser.showOpenDialog(null);
+        DirectoryChooser fileChooser = new DirectoryChooser();
+        File defaultDirectory = new File("c:/");
+        fileChooser.setInitialDirectory(defaultDirectory);
 
-        if (selectedFile != null) {
-            outputFilePath.getItems().add(selectedFile.getAbsolutePath());
-        } else {
-            System.out.println("File not valid!");
-        }
+        File selectedDirectory = fileChooser.showDialog(null);
+        outputFolderText.setText(selectedDirectory.getAbsolutePath());
+
     }
 
-    public void startParameterView(ActionEvent event) throws IOException {
-        Parent root = FXMLLoader.load(Objects.requireNonNull(ImageTransformation.class.getResource("parameters_view.fxml")));
-        Stage stage = new Stage();
-        stage.setTitle("Set Parameters");
-        Scene scene = new Scene(root);
-        stage.setScene(scene);
-        stage.show();
+    public void setDefaultTTypeValues(ActionEvent event) {
+        TTypeSizeField.setText("1");
+        TTypeDepthField.setText("1");
     }
+
+    public void setDefaultAnalysisValues(ActionEvent event) {
+        EntropyField.setText("1");
+        StabilityField.setText("1");
+        RandomnessField.setText("1");
+    }
+
 
     public void startTransform(ActionEvent event) throws IOException {
         ProcessBuilder builder = new ProcessBuilder();
@@ -111,7 +127,7 @@ public class ImageTransformationController implements Initializable{
 //            writer.write("plot([1,2,3])");
 //            writer.newLine();
 
-            writer.write("print -djpg Transformed_Image.jpg");
+            writer.write("print -djpg Transformed_"+selectedFileName);
             writer.newLine();
 
             writer.write("quit");
@@ -136,19 +152,5 @@ public class ImageTransformationController implements Initializable{
         choiceBox.getItems().addAll(transformationTypes);
     }
 
-    /*private static class ProcessReadTask implements Callable<List<String>> {
 
-        private InputStream inputStream;
-
-        public ProcessReadTask(InputStream inputStream) {
-            this.inputStream = inputStream;
-        }
-
-        @Override
-        public List<String> call() {
-            return new BufferedReader(new InputStreamReader(inputStream))
-                    .lines()
-                    .collect(Collectors.toList());
-        }
-    }*/
 }
