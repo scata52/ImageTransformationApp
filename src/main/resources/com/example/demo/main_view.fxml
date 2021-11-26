@@ -65,13 +65,13 @@
             <Tooltip text="Choose the transformation type to be applied." />
          </tooltip></ChoiceBox>
       <TextArea fx:id="selectedFileText" layoutX="390.0" layoutY="37.0" prefHeight="37.0" prefWidth="352.0" />
-      <TextField fx:id="TTypeSizeField" layoutX="441.0" layoutY="93.0" prefHeight="25.0" prefWidth="62.0" />
-      <TextField fx:id="TTypeDepthField" layoutX="561.0" layoutY="93.0" prefHeight="25.0" prefWidth="62.0" />
-      <Label layoutX="412.0" layoutY="97.0" text="size:" />
-      <Label layoutX="518.0" layoutY="97.0" text="depth:" />
-      <TextField fx:id="EntropyField" layoutX="255.0" layoutY="187.0" prefHeight="25.0" prefWidth="62.0" />
-      <TextField fx:id="RandomnessField" layoutX="410.0" layoutY="187.0" prefHeight="25.0" prefWidth="62.0" />
-      <TextField fx:id="StabilityField" layoutX="561.0" layoutY="187.0" prefHeight="25.0" prefWidth="62.0" />
+      <TextField fx:id="tTypeSizeField" layoutX="462.0" layoutY="93.0" prefHeight="25.0" prefWidth="62.0" />
+      <TextField fx:id="tTypeLevelField" layoutX="566.0" layoutY="93.0" prefHeight="25.0" prefWidth="62.0" />
+      <Label layoutX="412.0" layoutY="97.0" text="number:" />
+      <Label layoutX="534.0" layoutY="97.0" text="level:" />
+      <TextField fx:id="entropyField" layoutX="255.0" layoutY="187.0" prefHeight="25.0" prefWidth="62.0" />
+      <TextField fx:id="randomnessField" layoutX="410.0" layoutY="187.0" prefHeight="25.0" prefWidth="62.0" />
+      <TextField fx:id="stabilityField" layoutX="561.0" layoutY="187.0" prefHeight="25.0" prefWidth="62.0" />
       <Button fx:id="useAnalysisDValuesBTN" layoutX="640.0" layoutY="187.0" mnemonicParsing="false" onAction="#setDefaultAnalysisValues" prefHeight="25.0" prefWidth="102.0" text="Use Default Values">
          <font>
             <Font size="10.0" />

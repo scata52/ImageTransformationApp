@@ -1,5 +1,6 @@
 package com.example.demo;
 
+import javafx.application.Platform;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -17,8 +18,6 @@ import java.net.URL;
 import java.util.List;
 import java.util.Objects;
 import java.util.ResourceBundle;
-import java.util.concurrent.*;
-import java.util.stream.Collectors;
 
 public class ImageTransformationController implements Initializable{
 
@@ -33,24 +32,28 @@ public class ImageTransformationController implements Initializable{
     private TextArea outputFolderText;
 
     @FXML
-    private TextField TTypeSizeField;
+    private TextField tTypeSizeField;
 
     @FXML
-    private TextField TTypeDepthField;
+    private TextField tTypeLevelField;
 
     @FXML
-    private TextField EntropyField;
+    private TextField entropyField;
 
     @FXML
-    private TextField StabilityField;
+    private TextField stabilityField;
 
     @FXML
-    private TextField RandomnessField;
+    private TextField randomnessField;
 
     private String selectedFileName;
 
+    private String path = "C:\\Users\\Cem Atalay\\Desktop\\Cem Code";
+
+    private String selectedTransformationType = "Gabor Transformation";
+
     private final String[] transformationTypes = {"Gabor Transformation", "Daubechies wavelet", "B-spline wavelet", "Apply All"};
-    private final String[] commands = {"octave-cli"}; // "cmd.exe", "/k", "start",
+    private final String[] commands = {"octave-cli"};
 
     static void launchMainView(Stage stage) throws IOException {
         Parent root = FXMLLoader.load(Objects.requireNonNull(ImageTransformation.class.getResource(
@@ -93,22 +96,99 @@ public class ImageTransformationController implements Initializable{
     }
 
     public void setDefaultTTypeValues(ActionEvent event) {
-        TTypeSizeField.setText("1");
-        TTypeDepthField.setText("1");
+        tTypeSizeField.setText("1");
+        tTypeLevelField.setText("1");
     }
 
     public void setDefaultAnalysisValues(ActionEvent event) {
-        EntropyField.setText("1");
-        StabilityField.setText("1");
-        RandomnessField.setText("1");
+        entropyField.setText("1");
+        stabilityField.setText("1");
+        randomnessField.setText("1");
+    }
+
+    public void getTransformationType(ActionEvent event) {
+        selectedTransformationType = choiceBox.getValue();
+    }
+
+    public String tTypeToCommand(String tType) {
+        return switch (tType) {
+            case "Daubechies wavelet" -> "db";
+            case "B-spline wavelet" -> "spline";
+            default -> "gabor";
+        };
+    }
+
+    public String adaptSizeToType(String tType, String tSize) {
+        return switch (tType) {
+            case "B-spline wavelet" -> tSize + ":" + tSize;
+            case "Daubechies wavelet" -> tSize;
+            default -> "";
+        };
+    }
+
+    static boolean isDBSizeValid(String tSize) {
+        int tSizeInt = Integer.parseInt(tSize);
+        return tSizeInt % 2 == 0 && tSizeInt >= 2 && tSizeInt <= 20;
+    }
+
+    static boolean isSplineSizeValid(String tSize) {
+        int tSizeInt = Integer.parseInt(tSize);
+        return tSizeInt >= 1 && tSizeInt <=9;
+    }
+
+    public boolean checkValidParameters(String tType,String tSize,String tLevel) {
+        if(Objects.equals(tType, "gabor") && !Objects.equals(tLevel, "1")) {
+            Platform.runLater(() -> {
+                        Alert alert = new Alert(Alert.AlertType.ERROR);
+                        alert.setTitle("Invalid Level");
+                        alert.setHeaderText("Level of Gabor Transformation must be \"1\"");
+                        alert.showAndWait();
+                    }
+            );
+            return true;
+        }
+
+        else if(Objects.equals(tType, "db") && !isDBSizeValid(tSize)) {
+            Platform.runLater(() -> {
+                        Alert alert = new Alert(Alert.AlertType.ERROR);
+                        alert.setTitle("Invalid Size");
+                        alert.setHeaderText("Daubechies wavelet transformation number must be even, and 2<=NUMBER<=20");
+                        alert.showAndWait();
+                    }
+            );
+            return true;
+        }
+
+        else if (Objects.equals(tType, "spline") && !isSplineSizeValid(tSize)) {
+            Platform.runLater(() -> {
+                        Alert alert = new Alert(Alert.AlertType.ERROR);
+                        alert.setTitle("Invalid Size");
+                        alert.setHeaderText("B-spline wavelet transformation number must be 1<=NUMBER<=10");
+                        alert.showAndWait();
+                    }
+            );
+            return true;
+        }
+        return false;
     }
 
 
     public void startTransform(ActionEvent event) throws IOException {
+
+        String tTypeCommand = tTypeToCommand(selectedTransformationType);
+        String tSize = tTypeSizeField.getText();
+        String tLevel = tTypeLevelField.getText();
+
+        if(checkValidParameters(tTypeCommand, tSize, tLevel)) {return;}
+
+        tSize = adaptSizeToType(selectedTransformationType,tTypeSizeField.getText());
+
         ProcessBuilder builder = new ProcessBuilder();
         builder.command(commands);
-        builder.directory(new File("C:\\Users\\Cem Atalay\\Desktop\\Test (1)"));
+        builder.directory(new File(path));
         builder.redirectErrorStream(true);
+
+        String imageTransformCommand = "imagetransform(\""+selectedFileName+"\",\""+ tTypeCommand + tSize +"\","+tLevel+")";
 
         Process process;
         try {
@@ -121,11 +201,8 @@ public class ImageTransformationController implements Initializable{
             writer.write("pkg load ltfat");
             writer.newLine();
 
-            writer.write("imagetransform(\""+selectedFileName+"\",\"gabor\",1)");
+            writer.write(imageTransformCommand);
             writer.newLine();
-
-//            writer.write("plot([1,2,3])");
-//            writer.newLine();
 
             writer.write("print -djpg Transformed_"+selectedFileName);
             writer.newLine();
@@ -149,7 +226,10 @@ public class ImageTransformationController implements Initializable{
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
+
         choiceBox.getItems().addAll(transformationTypes);
+        choiceBox.setOnAction(this::getTransformationType);
+
     }
 
 
