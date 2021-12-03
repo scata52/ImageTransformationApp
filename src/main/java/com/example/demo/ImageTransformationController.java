@@ -15,9 +15,7 @@ import javafx.stage.Stage;
 
 import java.io.*;
 import java.net.URL;
-import java.util.List;
-import java.util.Objects;
-import java.util.ResourceBundle;
+import java.util.*;
 
 public class ImageTransformationController implements Initializable{
 
@@ -114,6 +112,7 @@ public class ImageTransformationController implements Initializable{
         return switch (tType) {
             case "Daubechies wavelet" -> "db";
             case "B-spline wavelet" -> "spline";
+            case "Apply all" -> "";
             default -> "gabor";
         };
     }
@@ -163,7 +162,7 @@ public class ImageTransformationController implements Initializable{
             Platform.runLater(() -> {
                         Alert alert = new Alert(Alert.AlertType.ERROR);
                         alert.setTitle("Invalid Size");
-                        alert.setHeaderText("B-spline wavelet transformation number must be 1<=NUMBER<=10");
+                        alert.setHeaderText("B-spline wavelet transformation number must be 1<=NUMBER<=9");
                         alert.showAndWait();
                     }
             );
@@ -172,23 +171,14 @@ public class ImageTransformationController implements Initializable{
         return false;
     }
 
-
-    public void startTransform(ActionEvent event) throws IOException {
-
-        String tTypeCommand = tTypeToCommand(selectedTransformationType);
-        String tSize = tTypeSizeField.getText();
-        String tLevel = tTypeLevelField.getText();
-
-        if(checkValidParameters(tTypeCommand, tSize, tLevel)) {return;}
-
-        tSize = adaptSizeToType(selectedTransformationType,tTypeSizeField.getText());
+    public void imageTransform(String tTypeCommand, String tLevel) {
 
         ProcessBuilder builder = new ProcessBuilder();
         builder.command(commands);
         builder.directory(new File(path));
         builder.redirectErrorStream(true);
 
-        String imageTransformCommand = "imagetransform(\""+selectedFileName+"\",\""+ tTypeCommand + tSize +"\","+tLevel+")";
+        String imageTransformCommand = "imagetransform(\""+selectedFileName+"\",\""+ tTypeCommand + "\","+tLevel+")";
 
         Process process;
         try {
@@ -204,7 +194,10 @@ public class ImageTransformationController implements Initializable{
             writer.write(imageTransformCommand);
             writer.newLine();
 
-            writer.write("print -djpg Transformed_"+selectedFileName);
+            String preFix = tTypeCommand.split(":")[0];
+            String outputFileName = preFix+"_"+selectedFileName;
+
+            writer.write("print -djpg "+outputFileName);
             writer.newLine();
 
             writer.write("quit");
@@ -221,6 +214,37 @@ public class ImageTransformationController implements Initializable{
         } catch (IOException e) {
             e.printStackTrace();
         }
+
+    }
+
+    /*public void applyAll() {
+
+        String[] defaultCommands = {"gabor", "db2", "spline1:1"};
+
+        for(String command : defaultCommands) {
+            selectedFileName = imageTransform(command, "1");
+        }
+
+    }*/
+
+
+    public void startTransform(ActionEvent event) throws IOException {
+
+        String tSize = tTypeSizeField.getText();
+        String tTypeCommand = tTypeToCommand(selectedTransformationType);
+        String tLevel = tTypeLevelField.getText();
+
+        /*if(Objects.equals(tTypeCommand, "")) {
+            applyAll();
+        }*/
+
+        if(checkValidParameters(tTypeCommand, tSize, tLevel)) {return;}
+
+        tSize = adaptSizeToType(selectedTransformationType,tTypeSizeField.getText());
+        tTypeCommand += tSize;
+
+        imageTransform(tTypeCommand, tLevel);
+
 
     }
 
