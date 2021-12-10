@@ -24,6 +24,9 @@ public class ImageTransformationController implements Initializable{
     private ChoiceBox<String> choiceBox;
 
     @FXML
+    private Button transformBTN;
+
+    @FXML
     private TextArea selectedFileText;
 
     @FXML
@@ -45,6 +48,9 @@ public class ImageTransformationController implements Initializable{
     private TextField randomnessField;
 
     private String selectedFileName;
+
+    private BufferedWriter writer;
+    private final ProcessBuilder builder = new ProcessBuilder();
 
     private String path = "C:\\Users\\Cem Atalay\\Desktop\\Cem Code";
 
@@ -112,7 +118,7 @@ public class ImageTransformationController implements Initializable{
         return switch (tType) {
             case "Daubechies wavelet" -> "db";
             case "B-spline wavelet" -> "spline";
-            case "Apply all" -> "";
+            case "Apply all" -> "all";
             default -> "gabor";
         };
     }
@@ -171,37 +177,96 @@ public class ImageTransformationController implements Initializable{
         return false;
     }
 
-    public void imageTransform(String tTypeCommand, String tLevel) {
+    public void writeToOctave(String string) throws IOException {
+        writer.write(string);
+        writer.newLine();
+    }
 
-        ProcessBuilder builder = new ProcessBuilder();
+    public String imageTransform(String tTypeCommand, String tLevel) {
+
+        String imageTransformCommand = "imagetransform(\""+selectedFileName+"\",\""+ tTypeCommand + "\","+tLevel+")";
+
+        String preFix = tTypeCommand.split(":")[0];
+        String outputFileName = preFix+"_"+selectedFileName;
+
+        try {
+            writeToOctave(imageTransformCommand);
+
+            writeToOctave("print -djpg "+outputFileName);
+
+
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return outputFileName;
+    }
+
+    public static void wait(int ms)
+    {
+        try
+        {
+            Thread.sleep(ms);
+        }
+        catch(InterruptedException ex)
+        {
+            Thread.currentThread().interrupt();
+        }
+    }
+
+    public void applyAll() {
+
+        String[] defaultCommands = {"gabor", "db2", "spline1:1"};
+        String defaultLevel = "1";
+
+        for(String command : defaultCommands) {
+            selectedFileName = imageTransform(command, defaultLevel);
+            wait(4000);
+        }
+
+    }
+
+    public void changeButtonText() {
+        if(Objects.equals(transformBTN.getText(), "Processing")) {
+            transformBTN.setText("Transform");
+        } else {
+            transformBTN.setText("Processing");
+        }
+    }
+
+    public void runTransform() {
+
         builder.command(commands);
         builder.directory(new File(path));
         builder.redirectErrorStream(true);
 
-        String imageTransformCommand = "imagetransform(\""+selectedFileName+"\",\""+ tTypeCommand + "\","+tLevel+")";
+        String tSize = tTypeSizeField.getText();
+        String tTypeCommand = tTypeToCommand(selectedTransformationType);
+        String tLevel = tTypeLevelField.getText();
+
+        if(checkValidParameters(tTypeCommand, tSize, tLevel)) {return;}
+
+        tSize = adaptSizeToType(selectedTransformationType,tTypeSizeField.getText());
+        String tType = tTypeCommand + tSize;
+
+        Platform.runLater(this::changeButtonText);
 
         Process process;
-        try {
+
+        try{
             process = builder.start();
 
-            BufferedWriter writer = new BufferedWriter(new OutputStreamWriter(process.getOutputStream ()));
+            writer = new BufferedWriter(new OutputStreamWriter(process.getOutputStream ()));
             BufferedReader br = new BufferedReader(new InputStreamReader(process.getInputStream()));
 
+            writeToOctave("pkg load ltfat");
 
-            writer.write("pkg load ltfat");
-            writer.newLine();
+            if(Objects.equals(tTypeCommand, "all")) {
+                applyAll();
+            } else {
+                imageTransform(tType, tLevel);
+            }
 
-            writer.write(imageTransformCommand);
-            writer.newLine();
-
-            String preFix = tTypeCommand.split(":")[0];
-            String outputFileName = preFix+"_"+selectedFileName;
-
-            writer.write("print -djpg "+outputFileName);
-            writer.newLine();
-
-            writer.write("quit");
-            writer.newLine();
+            writeToOctave("quit");
 
             writer.flush();
 
@@ -211,42 +276,24 @@ public class ImageTransformationController implements Initializable{
                 System.out.println(line);
             }
 
+
         } catch (IOException e) {
             e.printStackTrace();
         }
 
+        Platform.runLater(this::changeButtonText);
     }
-
-    /*public void applyAll() {
-
-        String[] defaultCommands = {"gabor", "db2", "spline1:1"};
-
-        for(String command : defaultCommands) {
-            selectedFileName = imageTransform(command, "1");
-        }
-
-    }*/
-
 
     public void startTransform(ActionEvent event) throws IOException {
 
-        String tSize = tTypeSizeField.getText();
-        String tTypeCommand = tTypeToCommand(selectedTransformationType);
-        String tLevel = tTypeLevelField.getText();
+        Runnable transformation = this::runTransform;
 
-        /*if(Objects.equals(tTypeCommand, "")) {
-            applyAll();
-        }*/
-
-        if(checkValidParameters(tTypeCommand, tSize, tLevel)) {return;}
-
-        tSize = adaptSizeToType(selectedTransformationType,tTypeSizeField.getText());
-        tTypeCommand += tSize;
-
-        imageTransform(tTypeCommand, tLevel);
-
+        Thread backgroundThread = new Thread(transformation);
+        backgroundThread.setDaemon(true);
+        backgroundThread.start();
 
     }
+
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
