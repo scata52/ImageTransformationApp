@@ -228,17 +228,21 @@ public class ImageTransformationController implements Initializable{
         }
     }
 
+    public String checkEmptyField(TextField textField) {
+        return textField.getText().trim().isEmpty() ? textField.getPromptText() : textField.getText();
+    }
+
     public void runTransform() {
 
         builder.command(commands);
         builder.directory(new File(path));
         builder.redirectErrorStream(true);
 
-        String gaborLevel = gaborLevelField.getText();
-        String dbLevel = dbLevelField.getText();
-        String splineLevel = splineLevelField.getText();
-        String dbDegree = dbDegreeField.getText();
-        String temp = splineDegreeField.getText();
+        String gaborLevel = checkEmptyField(gaborLevelField);
+        String dbLevel = checkEmptyField(dbLevelField);
+        String splineLevel = checkEmptyField(splineLevelField);
+        String dbDegree = checkEmptyField(dbDegreeField);
+        String temp = checkEmptyField(splineDegreeField);
         String splineDegree = temp + ":" + temp;
 
         HashMap<String, String> transformCommands = new HashMap<>();
