@@ -2,7 +2,6 @@
 
 <?import javafx.scene.control.Button?>
 <?import javafx.scene.control.CheckBox?>
-<?import javafx.scene.control.ChoiceBox?>
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.control.TextArea?>
 <?import javafx.scene.control.TextField?>
@@ -10,14 +9,14 @@
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.text.Font?>
 
-<AnchorPane prefHeight="355.0" prefWidth="779.0" xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.demo.ImageTransformationController">
+<AnchorPane prefHeight="427.0" prefWidth="779.0" xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.demo.ImageTransformationController">
    <children>
       <Label layoutX="36.0" layoutY="42.0" text="Raw Data:">
          <font>
             <Font size="18.0" />
          </font>
       </Label>
-      <Label layoutX="36.0" layoutY="245.0" text="Output Path:">
+      <Label layoutX="42.0" layoutY="327.0" text="Output Path:">
          <font>
             <Font size="18.0" />
          </font>
@@ -26,7 +25,7 @@
          <tooltip>
             <Tooltip text="Choose an image or a file of images to be transformed and analyzed. " />
          </tooltip></Button>
-      <Button fx:id="chooseOutputFileBTN" layoutX="247.0" layoutY="246.0" mnemonicParsing="false" onAction="#chooseOutputFiles" text="Choose File">
+      <Button fx:id="chooseOutputFileBTN" layoutX="243.0" layoutY="327.0" mnemonicParsing="false" onAction="#chooseOutputFiles" text="Choose File">
          <tooltip>
             <Tooltip text="Choose where you want the transformed files to be stored." />
          </tooltip></Button>
@@ -35,7 +34,7 @@
             <Font size="18.0" />
          </font>
       </Label>
-      <Button fx:id="useTTypeDValuesBTN" layoutX="640.0" layoutY="93.0" mnemonicParsing="false" onAction="#setDefaultTTypeValues" prefHeight="25.0" prefWidth="102.0" text="Use Default Values">
+      <Button fx:id="useTTypeDValuesBTN" layoutX="640.0" layoutY="93.0" mnemonicParsing="false" prefHeight="25.0" prefWidth="102.0" text="Use Default Values">
          <font>
             <Font size="10.0" />
          </font>
@@ -47,32 +46,24 @@
             </Tooltip>
          </tooltip>
       </Button>
-      <Label layoutX="36.0" layoutY="147.0" text="Analysis:">
+      <Label layoutX="42.0" layoutY="245.0" text="Analysis:">
          <font>
             <Font size="18.0" />
          </font>
       </Label>
-      <CheckBox layoutX="255.0" layoutY="153.0" mnemonicParsing="false" text="Entropy" />
-      <CheckBox layoutX="404.0" layoutY="153.0" mnemonicParsing="false" text="Randomness" />
-      <CheckBox layoutX="560.0" layoutY="153.0" mnemonicParsing="false" text="Stability" />
-      <Button fx:id="transformBTN" cache="true" defaultButton="true" layoutX="339.0" layoutY="297.0" mnemonicParsing="false" onAction="#startTransform" prefHeight="31.0" prefWidth="102.0" text="Transform">
+      <CheckBox layoutX="255.0" layoutY="250.0" mnemonicParsing="false" text="Entropy" />
+      <CheckBox layoutX="404.0" layoutY="250.0" mnemonicParsing="false" text="Randomness" />
+      <CheckBox layoutX="560.0" layoutY="250.0" mnemonicParsing="false" text="Stability" />
+      <Button fx:id="transformBTN" cache="true" defaultButton="true" layoutX="339.0" layoutY="374.0" mnemonicParsing="false" onAction="#startTransform" prefHeight="31.0" prefWidth="102.0" text="Transform">
          <font>
             <Font size="15.0" />
          </font>
       </Button>
-      <ChoiceBox fx:id="choiceBox" layoutX="247.0" layoutY="93.0" prefHeight="25.0" prefWidth="157.0" value="Gabor Transformation">
-         <tooltip>
-            <Tooltip text="Choose the transformation type to be applied." />
-         </tooltip></ChoiceBox>
       <TextArea fx:id="selectedFileText" layoutX="390.0" layoutY="37.0" prefHeight="37.0" prefWidth="352.0" />
-      <TextField fx:id="tTypeSizeField" layoutX="462.0" layoutY="93.0" prefHeight="25.0" prefWidth="62.0" />
-      <TextField fx:id="tTypeLevelField" layoutX="566.0" layoutY="93.0" prefHeight="25.0" prefWidth="62.0" />
-      <Label layoutX="412.0" layoutY="97.0" text="number:" />
-      <Label layoutX="534.0" layoutY="97.0" text="level:" />
-      <TextField fx:id="entropyField" layoutX="255.0" layoutY="187.0" prefHeight="25.0" prefWidth="62.0" />
-      <TextField fx:id="randomnessField" layoutX="410.0" layoutY="187.0" prefHeight="25.0" prefWidth="62.0" />
-      <TextField fx:id="stabilityField" layoutX="561.0" layoutY="187.0" prefHeight="25.0" prefWidth="62.0" />
-      <Button fx:id="useAnalysisDValuesBTN" layoutX="640.0" layoutY="187.0" mnemonicParsing="false" onAction="#setDefaultAnalysisValues" prefHeight="25.0" prefWidth="102.0" text="Use Default Values">
+      <TextField fx:id="entropyField" layoutX="255.0" layoutY="283.0" prefHeight="25.0" prefWidth="62.0" />
+      <TextField fx:id="randomnessField" layoutX="412.0" layoutY="283.0" prefHeight="25.0" prefWidth="62.0" />
+      <TextField fx:id="stabilityField" layoutX="561.0" layoutY="283.0" prefHeight="25.0" prefWidth="62.0" />
+      <Button fx:id="useAnalysisDValuesBTN" layoutX="640.0" layoutY="283.0" mnemonicParsing="false" prefHeight="25.0" prefWidth="102.0" text="Use Default Values">
          <font>
             <Font size="10.0" />
          </font>
@@ -84,6 +75,51 @@
             </Tooltip>
          </tooltip>
       </Button>
-      <TextArea fx:id="outputFolderText" layoutX="390.0" layoutY="240.0" prefHeight="37.0" prefWidth="352.0" />
+      <TextArea fx:id="outputFolderText" layoutX="405.0" layoutY="321.0" prefHeight="37.0" prefWidth="352.0" />
+      <CheckBox fx:id="gaborBox" layoutX="247.0" layoutY="97.0" mnemonicParsing="false" text="Gabor">
+         <font>
+            <Font size="15.0" />
+         </font>
+      </CheckBox>
+      <CheckBox fx:id="dbBox" layoutX="390.0" layoutY="95.0" mnemonicParsing="false" text="Daubechies">
+         <font>
+            <Font size="15.0" />
+         </font>
+      </CheckBox>
+      <CheckBox fx:id="splineBox" layoutX="539.0" layoutY="97.0" mnemonicParsing="false" text="B-Spline">
+         <font>
+            <Font size="15.0" />
+         </font>
+      </CheckBox>
+      <TextField fx:id="gaborLevelField" layoutX="247.0" layoutY="144.0" prefHeight="25.0" prefWidth="69.0" />
+      <TextField fx:id="dbLevelField" layoutX="390.0" layoutY="144.0" prefHeight="25.0" prefWidth="69.0" />
+      <TextField fx:id="splineLevelField" layoutX="539.0" layoutY="144.0" prefHeight="25.0" prefWidth="69.0" />
+      <Label layoutX="371.0" layoutY="201.0" text="D:">
+         <tooltip>
+            <Tooltip text="Degree" />
+         </tooltip>
+      </Label>
+      <Label layoutX="521.0" layoutY="201.0" text="D:">
+         <tooltip>
+            <Tooltip text="Degree" />
+         </tooltip>
+      </Label>
+      <TextField fx:id="dbDegreeField" layoutX="390.0" layoutY="197.0" prefHeight="25.0" prefWidth="69.0" />
+      <TextField fx:id="splineDegreeField" layoutX="539.0" layoutY="197.0" prefHeight="25.0" prefWidth="69.0" />
+      <Label layoutX="372.0" layoutY="148.0" text="L:">
+         <tooltip>
+            <Tooltip text="Level" />
+         </tooltip>
+      </Label>
+      <Label layoutX="523.0" layoutY="148.0" text="L:">
+         <tooltip>
+            <Tooltip text="Level" />
+         </tooltip>
+      </Label>
+      <Label layoutX="231.0" layoutY="148.0" text="L:">
+         <tooltip>
+            <Tooltip text="Level" />
+         </tooltip>
+      </Label>
    </children>
 </AnchorPane>

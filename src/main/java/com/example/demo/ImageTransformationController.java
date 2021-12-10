@@ -19,10 +19,6 @@ import java.util.*;
 
 public class ImageTransformationController implements Initializable{
 
-
-    @FXML
-    private ChoiceBox<String> choiceBox;
-
     @FXML
     private Button transformBTN;
 
@@ -33,10 +29,28 @@ public class ImageTransformationController implements Initializable{
     private TextArea outputFolderText;
 
     @FXML
-    private TextField tTypeSizeField;
+    private TextField gaborLevelField;
 
     @FXML
-    private TextField tTypeLevelField;
+    private TextField dbLevelField;
+
+    @FXML
+    private TextField splineLevelField;
+
+    @FXML
+    private TextField dbDegreeField;
+
+    @FXML
+    private TextField splineDegreeField;
+
+    @FXML
+    private CheckBox gaborBox;
+
+    @FXML
+    private CheckBox dbBox;
+
+    @FXML
+    private CheckBox splineBox;
 
     @FXML
     private TextField entropyField;
@@ -53,8 +67,6 @@ public class ImageTransformationController implements Initializable{
     private final ProcessBuilder builder = new ProcessBuilder();
 
     private String path = "C:\\Users\\Cem Atalay\\Desktop\\Cem Code";
-
-    private String selectedTransformationType = "Gabor Transformation";
 
     private final String[] transformationTypes = {"Gabor Transformation", "Daubechies wavelet", "B-spline wavelet", "Apply All"};
     private final String[] commands = {"octave-cli"};
@@ -99,20 +111,20 @@ public class ImageTransformationController implements Initializable{
 
     }
 
-    public void setDefaultTTypeValues(ActionEvent event) {
+    /*public void setDefaultTTypeValues(ActionEvent event) {
         tTypeSizeField.setText("1");
         tTypeLevelField.setText("1");
-    }
+    }*/
 
-    public void setDefaultAnalysisValues(ActionEvent event) {
+    /*public void setDefaultAnalysisValues(ActionEvent event) {
         entropyField.setText("1");
         stabilityField.setText("1");
         randomnessField.setText("1");
-    }
+    }*/
 
-    public void getTransformationType(ActionEvent event) {
+    /*public void getTransformationType(ActionEvent event) {
         selectedTransformationType = choiceBox.getValue();
-    }
+    }*/
 
     public String tTypeToCommand(String tType) {
         return switch (tType) {
@@ -123,12 +135,20 @@ public class ImageTransformationController implements Initializable{
         };
     }
 
-    public String adaptSizeToType(String tType, String tSize) {
+    /*public String adaptSizeToType(String tType, String tSize) {
         return switch (tType) {
             case "B-spline wavelet" -> tSize + ":" + tSize;
             case "Daubechies wavelet" -> tSize;
             default -> "";
         };
+    }*/
+
+    void setDefaults() {
+        gaborLevelField.setPromptText("1");
+        dbDegreeField.setPromptText("2");
+        dbLevelField.setPromptText("1");
+        splineDegreeField.setPromptText("1");
+        splineLevelField.setPromptText("1");
     }
 
     static boolean isDBSizeValid(String tSize) {
@@ -182,7 +202,7 @@ public class ImageTransformationController implements Initializable{
         writer.newLine();
     }
 
-    public String imageTransform(String tTypeCommand, String tLevel) {
+    public void imageTransform(String tTypeCommand, String tLevel) {
 
         String imageTransformCommand = "imagetransform(\""+selectedFileName+"\",\""+ tTypeCommand + "\","+tLevel+")";
 
@@ -198,31 +218,6 @@ public class ImageTransformationController implements Initializable{
         } catch (IOException e) {
             e.printStackTrace();
         }
-        return outputFileName;
-    }
-
-    public static void wait(int ms)
-    {
-        try
-        {
-            Thread.sleep(ms);
-        }
-        catch(InterruptedException ex)
-        {
-            Thread.currentThread().interrupt();
-        }
-    }
-
-    public void applyAll() {
-
-        String[] defaultCommands = {"gabor", "db2", "spline1:1"};
-        String defaultLevel = "1";
-
-        for(String command : defaultCommands) {
-            selectedFileName = imageTransform(command, defaultLevel);
-            wait(4000);
-        }
-
     }
 
     public void changeButtonText() {
@@ -239,14 +234,35 @@ public class ImageTransformationController implements Initializable{
         builder.directory(new File(path));
         builder.redirectErrorStream(true);
 
-        String tSize = tTypeSizeField.getText();
+        String gaborLevel = gaborLevelField.getText();
+        String dbLevel = dbLevelField.getText();
+        String splineLevel = splineLevelField.getText();
+        String dbDegree = dbDegreeField.getText();
+        String temp = splineDegreeField.getText();
+        String splineDegree = temp + ":" + temp;
+
+        HashMap<String, String> transformCommands = new HashMap<>();
+
+        if(gaborBox.isSelected()) {
+            transformCommands.put("gabor", gaborLevel);
+        }
+        if(dbBox.isSelected()) {
+            transformCommands.put("db" + dbDegree, dbLevel);
+        }
+        if(splineBox.isSelected()) {
+            transformCommands.put("spline" + splineDegree, splineLevel);
+        }
+
+
+
+        /*String tSize = tTypeSizeField.getText();
         String tTypeCommand = tTypeToCommand(selectedTransformationType);
         String tLevel = tTypeLevelField.getText();
 
         if(checkValidParameters(tTypeCommand, tSize, tLevel)) {return;}
 
         tSize = adaptSizeToType(selectedTransformationType,tTypeSizeField.getText());
-        String tType = tTypeCommand + tSize;
+        String tType = tTypeCommand + tSize;*/
 
         Platform.runLater(this::changeButtonText);
 
@@ -260,10 +276,8 @@ public class ImageTransformationController implements Initializable{
 
             writeToOctave("pkg load ltfat");
 
-            if(Objects.equals(tTypeCommand, "all")) {
-                applyAll();
-            } else {
-                imageTransform(tType, tLevel);
+            for(var entry : transformCommands.entrySet()) {
+                imageTransform(entry.getKey(), entry.getValue());
             }
 
             writeToOctave("quit");
@@ -297,10 +311,7 @@ public class ImageTransformationController implements Initializable{
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
-
-        choiceBox.getItems().addAll(transformationTypes);
-        choiceBox.setOnAction(this::getTransformationType);
-
+        setDefaults();
     }
 
 
