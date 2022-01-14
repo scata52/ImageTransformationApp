@@ -91,35 +91,41 @@
             <Font size="15.0" />
          </font>
       </CheckBox>
-      <TextField fx:id="gaborLevelField" layoutX="247.0" layoutY="144.0" prefHeight="25.0" prefWidth="69.0" />
-      <TextField fx:id="dbLevelField" layoutX="390.0" layoutY="144.0" prefHeight="25.0" prefWidth="69.0" />
-      <TextField fx:id="splineLevelField" layoutX="539.0" layoutY="144.0" prefHeight="25.0" prefWidth="69.0" />
-      <Label layoutX="371.0" layoutY="201.0" text="D:">
+      <TextField fx:id="gaborLevelField" layoutX="247.0" layoutY="197.0" prefHeight="25.0" prefWidth="69.0" />
+      <TextField fx:id="dbLevelField" layoutX="390.0" layoutY="197.0" prefHeight="25.0" prefWidth="69.0" />
+      <TextField fx:id="splineLevelField" layoutX="539.0" layoutY="197.0" prefHeight="25.0" prefWidth="69.0" />
+      <Label layoutX="361.0" layoutY="148.0" text="Deg:">
          <tooltip>
             <Tooltip text="Degree" />
          </tooltip>
       </Label>
-      <Label layoutX="521.0" layoutY="201.0" text="D:">
+      <Label layoutX="509.0" layoutY="148.0" text="Deg:">
          <tooltip>
             <Tooltip text="Degree" />
          </tooltip>
       </Label>
-      <TextField fx:id="dbDegreeField" layoutX="390.0" layoutY="197.0" prefHeight="25.0" prefWidth="69.0" />
-      <TextField fx:id="splineDegreeField" layoutX="539.0" layoutY="197.0" prefHeight="25.0" prefWidth="69.0" />
-      <Label layoutX="372.0" layoutY="148.0" text="L:">
+      <TextField fx:id="dbDegreeField" layoutX="390.0" layoutY="144.0" prefHeight="25.0" prefWidth="69.0" />
+      <TextField fx:id="splineDegreeField" layoutX="539.0" layoutY="144.0" prefHeight="25.0" prefWidth="69.0" />
+      <Label layoutX="365.0" layoutY="201.0" text="Lvl:">
          <tooltip>
             <Tooltip text="Level" />
          </tooltip>
       </Label>
-      <Label layoutX="523.0" layoutY="148.0" text="L:">
+      <Label layoutX="513.0" layoutY="201.0" text="Lvl:">
          <tooltip>
             <Tooltip text="Level" />
          </tooltip>
       </Label>
-      <Label layoutX="231.0" layoutY="148.0" text="L:">
+      <Label layoutX="226.0" layoutY="201.0" text="Lvl:">
          <tooltip>
             <Tooltip text="Level" />
          </tooltip>
       </Label>
+      <TextField layoutX="247.0" layoutY="144.0" prefHeight="25.0" prefWidth="69.0" />
+      <TextField layoutX="110.0" layoutY="144.0" prefHeight="25.0" prefWidth="69.0" />
+      <TextField layoutX="110.0" layoutY="197.0" prefHeight="25.0" prefWidth="69.0" />
+      <Label layoutX="97.0" layoutY="148.0" text="a:" />
+      <Label layoutX="230.0" layoutY="148.0" text="M:" />
+      <Label layoutX="97.0" layoutY="201.0" text="L:" />
    </children>
 </AnchorPane>

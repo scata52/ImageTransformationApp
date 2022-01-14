@@ -111,21 +111,6 @@ public class ImageTransformationController implements Initializable{
 
     }
 
-    /*public void setDefaultTTypeValues(ActionEvent event) {
-        tTypeSizeField.setText("1");
-        tTypeLevelField.setText("1");
-    }*/
-
-    /*public void setDefaultAnalysisValues(ActionEvent event) {
-        entropyField.setText("1");
-        stabilityField.setText("1");
-        randomnessField.setText("1");
-    }*/
-
-    /*public void getTransformationType(ActionEvent event) {
-        selectedTransformationType = choiceBox.getValue();
-    }*/
-
     public String tTypeToCommand(String tType) {
         return switch (tType) {
             case "Daubechies wavelet" -> "db";
@@ -145,50 +130,50 @@ public class ImageTransformationController implements Initializable{
 
     void setDefaults() {
         gaborLevelField.setPromptText("1");
-        dbDegreeField.setPromptText("2");
+        dbDegreeField.setPromptText("4");
         dbLevelField.setPromptText("1");
-        splineDegreeField.setPromptText("1");
+        splineDegreeField.setPromptText("3");
         splineLevelField.setPromptText("1");
     }
 
-    static boolean isDBSizeValid(String tSize) {
+    static boolean isDBDegreeValid(String tSize) {
         int tSizeInt = Integer.parseInt(tSize);
         return tSizeInt % 2 == 0 && tSizeInt >= 2 && tSizeInt <= 20;
     }
 
-    static boolean isSplineSizeValid(String tSize) {
-        int tSizeInt = Integer.parseInt(tSize);
+    static boolean isSplineDegreeValid(String tSize) {
+        int tSizeInt = Integer.parseInt(tSize.split(":")[0]);
         return tSizeInt >= 1 && tSizeInt <=9;
     }
 
-    public boolean checkValidParameters(String tType,String tSize,String tLevel) {
+    public boolean checkValidParameters(String tType,String tDegree,String tLevel) {
         if(Objects.equals(tType, "gabor") && !Objects.equals(tLevel, "1")) {
             Platform.runLater(() -> {
                         Alert alert = new Alert(Alert.AlertType.ERROR);
                         alert.setTitle("Invalid Level");
-                        alert.setHeaderText("Level of Gabor Transformation must be \"1\"");
+                        alert.setHeaderText("Level of Gabor Transformation must be 1");
                         alert.showAndWait();
                     }
             );
             return true;
         }
 
-        else if(Objects.equals(tType, "db") && !isDBSizeValid(tSize)) {
+        else if(Objects.equals(tType, "db") && !isDBDegreeValid(tDegree)) {
             Platform.runLater(() -> {
                         Alert alert = new Alert(Alert.AlertType.ERROR);
-                        alert.setTitle("Invalid Size");
-                        alert.setHeaderText("Daubechies wavelet transformation number must be even, and 2<=NUMBER<=20");
+                        alert.setTitle("Invalid Degree");
+                        alert.setHeaderText("Daubechies wavelet transformation degree must be even, and 2<=DEGREE<=20");
                         alert.showAndWait();
                     }
             );
             return true;
         }
 
-        else if (Objects.equals(tType, "spline") && !isSplineSizeValid(tSize)) {
+        else if (Objects.equals(tType, "spline") && !isSplineDegreeValid(tDegree)) {
             Platform.runLater(() -> {
                         Alert alert = new Alert(Alert.AlertType.ERROR);
-                        alert.setTitle("Invalid Size");
-                        alert.setHeaderText("B-spline wavelet transformation number must be 1<=NUMBER<=9");
+                        alert.setTitle("Invalid Degree");
+                        alert.setHeaderText("B-spline wavelet transformation degree must be 1<=DEGREE<=9");
                         alert.showAndWait();
                     }
             );
@@ -248,16 +233,17 @@ public class ImageTransformationController implements Initializable{
         HashMap<String, String> transformCommands = new HashMap<>();
 
         if(gaborBox.isSelected()) {
+            if(checkValidParameters("gabor", "", gaborLevel)) {return;}
             transformCommands.put("gabor", gaborLevel);
         }
         if(dbBox.isSelected()) {
+            if(checkValidParameters("db", dbDegree, dbLevel)) {return;}
             transformCommands.put("db" + dbDegree, dbLevel);
         }
         if(splineBox.isSelected()) {
+            if(checkValidParameters("spline", splineDegree, splineLevel)) {return;}
             transformCommands.put("spline" + splineDegree, splineLevel);
         }
-
-
 
         /*String tSize = tTypeSizeField.getText();
         String tTypeCommand = tTypeToCommand(selectedTransformationType);
