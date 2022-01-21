@@ -23,10 +23,22 @@ public class ImageTransformationController implements Initializable{
     private Button transformBTN;
 
     @FXML
+    private Button pTestButton;
+
+    @FXML
     private TextArea selectedFileText;
 
     @FXML
     private TextArea outputFolderText;
+
+    @FXML
+    private TextField aField;
+
+    @FXML
+    private TextField MField;
+
+    @FXML
+    private TextField LField;
 
     @FXML
     private TextField gaborLevelField;
@@ -134,6 +146,9 @@ public class ImageTransformationController implements Initializable{
         dbLevelField.setPromptText("1");
         splineDegreeField.setPromptText("3");
         splineLevelField.setPromptText("1");
+        aField.setPromptText("4");
+        MField.setPromptText("128");
+        LField.setPromptText("512");
     }
 
     static boolean isDBDegreeValid(String tSize) {
@@ -182,7 +197,7 @@ public class ImageTransformationController implements Initializable{
         return false;
     }
 
-    public void writeToOctave(String string) throws IOException {
+    public void writeToCMDLine(String string) throws IOException {
         writer.write(string);
         writer.newLine();
     }
@@ -195,9 +210,9 @@ public class ImageTransformationController implements Initializable{
         String outputFileName = preFix+"_"+selectedFileName;
 
         try {
-            writeToOctave(imageTransformCommand);
+            writeToCMDLine(imageTransformCommand);
 
-            writeToOctave("print -djpg "+outputFileName);
+            writeToCMDLine("print -djpg "+outputFileName);
 
 
         } catch (IOException e) {
@@ -215,6 +230,24 @@ public class ImageTransformationController implements Initializable{
 
     public String checkEmptyField(TextField textField) {
         return textField.getText().trim().isEmpty() ? textField.getPromptText() : textField.getText();
+    }
+
+    public void pythonTest() {
+
+
+        ProcessBuilder pythonBuilder = new ProcessBuilder();
+        String[] pythonCommands =  {"python", "\"C:\\Users\\Cem Atalay\\Desktop\\Cem Code/gabordemonstration.py\""};
+
+        pythonBuilder.command(pythonCommands);
+        pythonBuilder.directory(new File(path));
+        pythonBuilder.redirectErrorStream(true);
+
+        try{
+            Process p = pythonBuilder.start();
+
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 
     public void runTransform() {
@@ -264,13 +297,13 @@ public class ImageTransformationController implements Initializable{
             writer = new BufferedWriter(new OutputStreamWriter(process.getOutputStream ()));
             BufferedReader br = new BufferedReader(new InputStreamReader(process.getInputStream()));
 
-            writeToOctave("pkg load ltfat");
+            writeToCMDLine("pkg load ltfat");
 
             for(var entry : transformCommands.entrySet()) {
                 imageTransform(entry.getKey(), entry.getValue());
             }
 
-            writeToOctave("quit");
+            writeToCMDLine("quit");
 
             writer.flush();
 

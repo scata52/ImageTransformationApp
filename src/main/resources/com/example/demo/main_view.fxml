@@ -9,61 +9,60 @@
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.text.Font?>
 
-<AnchorPane prefHeight="427.0" prefWidth="779.0" xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.demo.ImageTransformationController">
+<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="715.0" prefWidth="779.0" xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.demo.ImageTransformationController">
    <children>
-      <Label layoutX="36.0" layoutY="42.0" text="Raw Data:">
+      <Label alignment="CENTER" contentDisplay="CENTER" layoutX="36.0" layoutY="42.0" text="Raw Data:">
          <font>
             <Font size="18.0" />
          </font>
       </Label>
-      <Label layoutX="42.0" layoutY="327.0" text="Output Path:">
+      <Label layoutX="36.0" layoutY="571.0" text="Output Path:">
          <font>
             <Font size="18.0" />
          </font>
       </Label>
-      <Button fx:id="chooseInputFileBTN" layoutX="247.0" layoutY="43.0" mnemonicParsing="false" onAction="#chooseInputFiles" text="Choose File">
+      <Button fx:id="chooseInputFileBTN" alignment="CENTER" contentDisplay="CENTER" layoutX="247.0" layoutY="43.0" mnemonicParsing="false" onAction="#chooseInputFiles" text="Choose File">
          <tooltip>
             <Tooltip text="Choose an image or a file of images to be transformed and analyzed. " />
-         </tooltip></Button>
-      <Button fx:id="chooseOutputFileBTN" layoutX="243.0" layoutY="327.0" mnemonicParsing="false" onAction="#chooseOutputFiles" text="Choose File">
+         </tooltip>
+      </Button>
+      <Button fx:id="chooseOutputFileBTN" layoutX="247.0" layoutY="572.0" mnemonicParsing="false" onAction="#chooseOutputFiles" text="Choose File">
          <tooltip>
             <Tooltip text="Choose where you want the transformed files to be stored." />
-         </tooltip></Button>
+         </tooltip>
+      </Button>
       <Label layoutX="36.0" layoutY="92.0" text="Transformation Type:">
          <font>
             <Font size="18.0" />
          </font>
       </Label>
-      <Button fx:id="useTTypeDValuesBTN" layoutX="640.0" layoutY="93.0" mnemonicParsing="false" prefHeight="25.0" prefWidth="102.0" text="Use Default Values">
-         <font>
-            <Font size="10.0" />
-         </font>
-         <tooltip>
-            <Tooltip text="Set the parameters for the selected transformation type and the desired analyses.">
-               <font>
-                  <Font size="10.0" />
-               </font>
-            </Tooltip>
-         </tooltip>
-      </Button>
-      <Label layoutX="42.0" layoutY="245.0" text="Analysis:">
+      <Label layoutX="36.0" layoutY="340.0" text="Analysis:">
          <font>
             <Font size="18.0" />
          </font>
       </Label>
-      <CheckBox layoutX="255.0" layoutY="250.0" mnemonicParsing="false" text="Entropy" />
-      <CheckBox layoutX="404.0" layoutY="250.0" mnemonicParsing="false" text="Randomness" />
-      <CheckBox layoutX="560.0" layoutY="250.0" mnemonicParsing="false" text="Stability" />
-      <Button fx:id="transformBTN" cache="true" defaultButton="true" layoutX="339.0" layoutY="374.0" mnemonicParsing="false" onAction="#startTransform" prefHeight="31.0" prefWidth="102.0" text="Transform">
+      <CheckBox layoutX="71.0" layoutY="388.0" mnemonicParsing="false" text="Entropy">
          <font>
             <Font size="15.0" />
+         </font></CheckBox>
+      <CheckBox layoutX="71.0" layoutY="430.0" mnemonicParsing="false" text="Randomness">
+         <font>
+            <Font size="15.0" />
+         </font></CheckBox>
+      <CheckBox layoutX="71.0" layoutY="472.0" mnemonicParsing="false" text="Stability">
+         <font>
+            <Font size="15.0" />
+         </font></CheckBox>
+      <Button fx:id="transformBTN" cache="true" defaultButton="true" layoutX="307.0" layoutY="638.0" mnemonicParsing="false" onAction="#startTransform" prefHeight="35.0" prefWidth="188.0" text="Apply Transformations">
+         <font>
+            <Font size="16.0" />
          </font>
       </Button>
       <TextArea fx:id="selectedFileText" layoutX="390.0" layoutY="37.0" prefHeight="37.0" prefWidth="352.0" />
-      <TextField fx:id="entropyField" layoutX="255.0" layoutY="283.0" prefHeight="25.0" prefWidth="62.0" />
-      <TextField fx:id="randomnessField" layoutX="412.0" layoutY="283.0" prefHeight="25.0" prefWidth="62.0" />
-      <TextField fx:id="stabilityField" layoutX="561.0" layoutY="283.0" prefHeight="25.0" prefWidth="62.0" />
-      <Button fx:id="useAnalysisDValuesBTN" layoutX="640.0" layoutY="283.0" mnemonicParsing="false" prefHeight="25.0" prefWidth="102.0" text="Use Default Values">
+      <TextField fx:id="entropyField" layoutX="221.0" layoutY="384.0" prefHeight="25.0" prefWidth="69.0" />
+      <TextField fx:id="randomnessField" layoutX="221.0" layoutY="426.0" prefHeight="25.0" prefWidth="69.0" />
+      <TextField fx:id="stabilityField" layoutX="221.0" layoutY="468.0" prefHeight="25.0" prefWidth="69.0" />
+      <Button fx:id="useAnalysisDValuesBTN" layoutX="347.0" layoutY="513.0" mnemonicParsing="false" prefHeight="25.0" prefWidth="116.0" text="Use All Default Values">
          <font>
             <Font size="10.0" />
          </font>
@@ -75,57 +74,134 @@
             </Tooltip>
          </tooltip>
       </Button>
-      <TextArea fx:id="outputFolderText" layoutX="405.0" layoutY="321.0" prefHeight="37.0" prefWidth="352.0" />
-      <CheckBox fx:id="gaborBox" layoutX="247.0" layoutY="97.0" mnemonicParsing="false" text="Gabor">
+      <TextArea fx:id="outputFolderText" layoutX="401.0" layoutY="566.0" prefHeight="37.0" prefWidth="352.0" />
+      <CheckBox fx:id="gaborBox" layoutX="63.0" layoutY="146.0" mnemonicParsing="false" text="Gabor">
          <font>
             <Font size="15.0" />
          </font>
       </CheckBox>
-      <CheckBox fx:id="dbBox" layoutX="390.0" layoutY="95.0" mnemonicParsing="false" text="Daubechies">
+      <CheckBox fx:id="dbBox" layoutX="63.0" layoutY="200.0" mnemonicParsing="false" text="Daubechies">
          <font>
             <Font size="15.0" />
          </font>
       </CheckBox>
-      <CheckBox fx:id="splineBox" layoutX="539.0" layoutY="97.0" mnemonicParsing="false" text="B-Spline">
+      <CheckBox fx:id="splineBox" layoutX="63.0" layoutY="254.0" mnemonicParsing="false" text="B-Spline">
          <font>
             <Font size="15.0" />
          </font>
       </CheckBox>
-      <TextField fx:id="gaborLevelField" layoutX="247.0" layoutY="197.0" prefHeight="25.0" prefWidth="69.0" />
-      <TextField fx:id="dbLevelField" layoutX="390.0" layoutY="197.0" prefHeight="25.0" prefWidth="69.0" />
-      <TextField fx:id="splineLevelField" layoutX="539.0" layoutY="197.0" prefHeight="25.0" prefWidth="69.0" />
-      <Label layoutX="361.0" layoutY="148.0" text="Deg:">
+      <TextField fx:id="gaborLevelField" layoutX="221.0" layoutY="144.0" prefHeight="25.0" prefWidth="69.0" />
+      <TextField fx:id="dbLevelField" layoutX="221.0" layoutY="198.0" prefHeight="25.0" prefWidth="69.0" />
+      <TextField fx:id="splineLevelField" layoutX="221.0" layoutY="252.0" prefHeight="25.0" prefWidth="69.0" />
+      <Label layoutX="317.0" layoutY="202.0" text="Deg:">
          <tooltip>
             <Tooltip text="Degree" />
          </tooltip>
       </Label>
-      <Label layoutX="509.0" layoutY="148.0" text="Deg:">
+      <Label layoutX="317.0" layoutY="256.0" text="Deg:">
          <tooltip>
             <Tooltip text="Degree" />
          </tooltip>
       </Label>
-      <TextField fx:id="dbDegreeField" layoutX="390.0" layoutY="144.0" prefHeight="25.0" prefWidth="69.0" />
-      <TextField fx:id="splineDegreeField" layoutX="539.0" layoutY="144.0" prefHeight="25.0" prefWidth="69.0" />
-      <Label layoutX="365.0" layoutY="201.0" text="Lvl:">
+      <TextField fx:id="dbDegreeField" layoutX="347.0" layoutY="198.0" prefHeight="25.0" prefWidth="69.0" />
+      <TextField fx:id="splineDegreeField" layoutX="348.0" layoutY="252.0" prefHeight="25.0" prefWidth="69.0" />
+      <Label layoutX="196.0" layoutY="202.0" text="Lvl:">
          <tooltip>
             <Tooltip text="Level" />
          </tooltip>
       </Label>
-      <Label layoutX="513.0" layoutY="201.0" text="Lvl:">
+      <Label layoutX="196.0" layoutY="256.0" text="Lvl:">
          <tooltip>
             <Tooltip text="Level" />
          </tooltip>
       </Label>
-      <Label layoutX="226.0" layoutY="201.0" text="Lvl:">
+      <Label layoutX="196.0" layoutY="148.0" text="Lvl:">
          <tooltip>
             <Tooltip text="Level" />
          </tooltip>
       </Label>
-      <TextField layoutX="247.0" layoutY="144.0" prefHeight="25.0" prefWidth="69.0" />
-      <TextField layoutX="110.0" layoutY="144.0" prefHeight="25.0" prefWidth="69.0" />
-      <TextField layoutX="110.0" layoutY="197.0" prefHeight="25.0" prefWidth="69.0" />
-      <Label layoutX="97.0" layoutY="148.0" text="a:" />
-      <Label layoutX="230.0" layoutY="148.0" text="M:" />
-      <Label layoutX="97.0" layoutY="201.0" text="L:" />
+      <TextField fx:id="MField" layoutX="474.0" layoutY="144.0" prefHeight="25.0" prefWidth="69.0" />
+      <TextField fx:id="aField" layoutX="347.0" layoutY="144.0" prefHeight="25.0" prefWidth="69.0" />
+      <TextField fx:id="LField" layoutX="581.0" layoutY="144.0" prefHeight="25.0" prefWidth="69.0" />
+      <Label layoutX="334.0" layoutY="148.0" text="a:" />
+      <Label layoutX="449.0" layoutY="148.0" text="M:" />
+      <Label layoutX="562.0" layoutY="148.0" text="L:" />
+      <Button fx:id="useTTypeDValuesBTN" layoutX="347.0" layoutY="302.0" mnemonicParsing="false" prefHeight="25.0" prefWidth="116.0" text="Use All Default Values">
+         <tooltip>
+            <Tooltip text="Set the parameters for the selected transformation type and the desired analyses.">
+               <font>
+                  <Font size="10.0" />
+               </font>
+            </Tooltip>
+         </tooltip>
+         <font>
+            <Font size="10.0" />
+         </font>
+      </Button>
+      <Button layoutX="672.0" layoutY="198.0" mnemonicParsing="false" prefHeight="25.0" prefWidth="77.0" text="Default">
+         <tooltip>
+            <Tooltip text="Set the parameters for the selected transformation type and the desired analyses.">
+               <font>
+                  <Font size="10.0" />
+               </font>
+            </Tooltip>
+         </tooltip>
+      </Button>
+      <Button layoutX="672.0" layoutY="144.0" mnemonicParsing="false" prefHeight="25.0" prefWidth="77.0" text="Default">
+         <tooltip>
+            <Tooltip text="Set the parameters for the selected transformation type and the desired analyses.">
+               <font>
+                  <Font size="10.0" />
+               </font>
+            </Tooltip>
+         </tooltip>
+      </Button>
+      <Button layoutX="672.0" layoutY="252.0" mnemonicParsing="false" prefHeight="25.0" prefWidth="77.0" text="Default">
+         <tooltip>
+            <Tooltip text="Set the parameters for the selected transformation type and the desired analyses.">
+               <font>
+                  <Font size="10.0" />
+               </font>
+            </Tooltip>
+         </tooltip>
+      </Button>
+      <Button fx:id="pTestButton" layoutX="577.0" layoutY="638.0" mnemonicParsing="false" onAction="#pythonTest" prefHeight="35.0" prefWidth="116.0" style="-fx-background-color: #F1C232;" text="Python Test">
+         <font>
+            <Font size="15.0" />
+         </font>
+      </Button>
+      <TextField layoutX="347.0" layoutY="384.0" prefHeight="25.0" prefWidth="69.0" />
+      <TextField layoutX="348.0" layoutY="426.0" prefHeight="25.0" prefWidth="69.0" />
+      <TextField layoutX="348.0" layoutY="468.0" prefHeight="25.0" prefWidth="69.0" />
+      <TextField layoutX="474.0" layoutY="386.0" prefHeight="25.0" prefWidth="69.0" />
+      <TextField layoutX="474.0" layoutY="426.0" prefHeight="25.0" prefWidth="69.0" />
+      <TextField layoutX="474.0" layoutY="468.0" prefHeight="25.0" prefWidth="69.0" />
+      <Button layoutX="603.0" layoutY="384.0" mnemonicParsing="false" prefHeight="25.0" prefWidth="77.0" text="Default">
+         <tooltip>
+            <Tooltip text="Set the parameters for the selected transformation type and the desired analyses.">
+               <font>
+                  <Font size="10.0" />
+               </font>
+            </Tooltip>
+         </tooltip>
+      </Button>
+      <Button layoutX="603.0" layoutY="426.0" mnemonicParsing="false" prefHeight="25.0" prefWidth="77.0" text="Default">
+         <tooltip>
+            <Tooltip text="Set the parameters for the selected transformation type and the desired analyses.">
+               <font>
+                  <Font size="10.0" />
+               </font>
+            </Tooltip>
+         </tooltip>
+      </Button>
+      <Button layoutX="603.0" layoutY="468.0" mnemonicParsing="false" prefHeight="25.0" prefWidth="77.0" text="Default">
+         <tooltip>
+            <Tooltip text="Set the parameters for the selected transformation type and the desired analyses.">
+               <font>
+                  <Font size="10.0" />
+               </font>
+            </Tooltip>
+         </tooltip>
+      </Button>
    </children>
 </AnchorPane>
