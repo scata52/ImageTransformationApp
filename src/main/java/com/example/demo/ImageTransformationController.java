@@ -26,25 +26,22 @@ public class ImageTransformationController implements Initializable{
     private Button pTestButton;
 
     @FXML
+    private Button likeUnlikeTestButton;
+
+    @FXML
     private TextArea selectedFileText;
 
     @FXML
     private TextArea outputFolderText;
 
     @FXML
-    private TextField aField;
-
-    @FXML
-    private TextField MField;
-
-    @FXML
-    private TextField LField;
-
-    @FXML
-    private TextField gaborLevelField;
+    private TextField gaborThresholdField;
 
     @FXML
     private TextField dbLevelField;
+
+    @FXML
+    private TextField haarLevelField;
 
     @FXML
     private TextField splineLevelField;
@@ -57,6 +54,9 @@ public class ImageTransformationController implements Initializable{
 
     @FXML
     private CheckBox gaborBox;
+
+    @FXML
+    private CheckBox haarBox;
 
     @FXML
     private CheckBox dbBox;
@@ -74,6 +74,8 @@ public class ImageTransformationController implements Initializable{
     private TextField randomnessField;
 
     private String selectedFileName;
+
+    private String selectedImageName;
 
     private BufferedWriter writer;
     private final ProcessBuilder builder = new ProcessBuilder();
@@ -106,7 +108,8 @@ public class ImageTransformationController implements Initializable{
         File selectedFile = fileChooser.showOpenDialog(null);
 
         if (selectedFile != null) {
-            selectedFileName = selectedFile.getName();
+            selectedFileName = selectedFile.getAbsolutePath();
+            selectedImageName = selectedFile.getName();
             selectedFileText.setText(selectedFileName);
         } else {
             System.out.println("File not valid!");
@@ -141,14 +144,12 @@ public class ImageTransformationController implements Initializable{
     }*/
 
     void setDefaults() {
-        gaborLevelField.setPromptText("1");
+        gaborThresholdField.setPromptText("40");
         dbDegreeField.setPromptText("4");
         dbLevelField.setPromptText("1");
         splineDegreeField.setPromptText("3");
         splineLevelField.setPromptText("1");
-        aField.setPromptText("4");
-        MField.setPromptText("128");
-        LField.setPromptText("512");
+        haarLevelField.setPromptText("1");
     }
 
     static boolean isDBDegreeValid(String tSize) {
@@ -204,10 +205,10 @@ public class ImageTransformationController implements Initializable{
 
     public void imageTransform(String tTypeCommand, String tLevel) {
 
-        String imageTransformCommand = "imagetransform(\""+selectedFileName+"\",\""+ tTypeCommand + "\","+tLevel+")";
+        String imageTransformCommand = "imagetransform(\""+selectedImageName+"\",\""+ tTypeCommand + "\","+tLevel+")";
 
         String preFix = tTypeCommand.split(":")[0];
-        String outputFileName = preFix+"_"+selectedFileName;
+        String outputFileName = preFix+"_"+selectedImageName;
 
         try {
             writeToCMDLine(imageTransformCommand);
@@ -232,11 +233,27 @@ public class ImageTransformationController implements Initializable{
         return textField.getText().trim().isEmpty() ? textField.getPromptText() : textField.getText();
     }
 
-    public void pythonTest() {
-
+    /*public void pythonTest() {
 
         ProcessBuilder pythonBuilder = new ProcessBuilder();
-        String[] pythonCommands =  {"python", "\"C:\\Users\\Cem Atalay\\Desktop\\Cem Code/gabordemonstration.py\""};
+        String[] pythonCommands =  {"python", "\"C:\\Users\\Cem Atalay\\Desktop\\Cem Code\\gabordemonstration.py\""};
+
+        pythonBuilder.command(pythonCommands);
+        pythonBuilder.directory(new File(path));
+        pythonBuilder.redirectErrorStream(true);
+
+        try{
+            Process p = pythonBuilder.start();
+
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }*/
+
+    public void analysisTest() {
+
+        ProcessBuilder pythonBuilder = new ProcessBuilder();
+        String[] pythonCommands =  {"python", "\"C:\\Users\\Cem Atalay\\Desktop\\Cem Code\\like_unlike.py\""};
 
         pythonBuilder.command(pythonCommands);
         pythonBuilder.directory(new File(path));
@@ -250,13 +267,65 @@ public class ImageTransformationController implements Initializable{
         }
     }
 
-    public void runTransform() {
+    public void runPythonTransform() {
+
+        ProcessBuilder pythonBuilder = new ProcessBuilder();
+
+        String gaborThr = checkEmptyField(gaborThresholdField);
+
+        ArrayList<String[]> transformCommands = new ArrayList<>();
+
+        String pathToImage = selectedFileText.getText();
+
+        if(dbBox.isSelected()) {
+            String dbLvl = checkEmptyField(dbLevelField);
+            String dbDeg = checkEmptyField(dbDegreeField);
+
+            String[] transformCommand = {"python", "\"C:\\Users\\Cem Atalay\\Desktop\\Cem Code\\real_wavelet.py\"",
+            "db" + dbDeg, dbLvl, pathToImage};
+
+            transformCommands.add(transformCommand);
+        }
+
+        if(haarBox.isSelected()) {
+            String haarLvl = checkEmptyField(haarLevelField);
+
+            String[] transformcommand = {"python", "\"C:\\Users\\Cem Atalay\\Desktop\\Cem Code\\real_wavelet.py\"",
+            "haar", haarLvl, pathToImage};
+
+            transformCommands.add(transformcommand);
+        }
+
+        if(gaborBox.isSelected()) {
+
+            String[] transformcommand = {"python",
+                    "\"C:\\Users\\Cem Atalay\\Desktop\\Cem Code\\real_gabor.py\"", pathToImage};
+
+            transformCommands.add(transformcommand);
+        }
+
+        for (String[] command : transformCommands) {
+            pythonBuilder.command(command);
+            pythonBuilder.directory(new File(path));
+            pythonBuilder.redirectErrorStream(true);
+
+            try{
+                Process p = pythonBuilder.start();
+
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
+
+    }
+
+    public void runOctaveTransform() {
 
         builder.command(commands);
         builder.directory(new File(path));
         builder.redirectErrorStream(true);
 
-        String gaborLevel = checkEmptyField(gaborLevelField);
+        String gaborLevel = checkEmptyField(gaborThresholdField);
         String dbLevel = checkEmptyField(dbLevelField);
         String splineLevel = checkEmptyField(splineLevelField);
         String dbDegree = checkEmptyField(dbDegreeField);
@@ -323,7 +392,7 @@ public class ImageTransformationController implements Initializable{
 
     public void startTransform(ActionEvent event) throws IOException {
 
-        Runnable transformation = this::runTransform;
+        Runnable transformation = this::runOctaveTransform;
 
         Thread backgroundThread = new Thread(transformation);
         backgroundThread.setDaemon(true);
