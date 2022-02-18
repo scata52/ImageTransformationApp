@@ -15,7 +15,11 @@ import javafx.stage.Stage;
 
 import java.io.*;
 import java.net.URL;
+import java.nio.file.Files;
+import java.nio.file.Path;
 import java.util.*;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 public class ImageTransformationController implements Initializable{
 
@@ -27,6 +31,12 @@ public class ImageTransformationController implements Initializable{
 
     @FXML
     private Button likeUnlikeTestButton;
+
+    @FXML
+    private Button chooseInputFileBTN;
+
+    @FXML
+    private Button chooseInputFolderBTN;
 
     @FXML
     private TextArea selectedFileText;
@@ -75,12 +85,14 @@ public class ImageTransformationController implements Initializable{
 
     private String selectedFileName;
 
+    private File selectedPath;
+
     private String selectedImageName;
 
     private BufferedWriter writer;
     private final ProcessBuilder builder = new ProcessBuilder();
 
-    private String path = "C:\\Users\\Cem Atalay\\Desktop\\Cem Code";
+    private String defaultPath = "C:\\Users\\Cem Atalay\\Desktop\\Cem Code";
 
     private final String[] transformationTypes = {"Gabor Transformation", "Daubechies wavelet", "B-spline wavelet", "Apply All"};
     private final String[] commands = {"octave-cli"};
@@ -105,15 +117,24 @@ public class ImageTransformationController implements Initializable{
 
     public void chooseInputFiles(ActionEvent event) {
         FileChooser fileChooser = new FileChooser();
-        File selectedFile = fileChooser.showOpenDialog(null);
+        selectedPath = fileChooser.showOpenDialog(null);
 
-        if (selectedFile != null) {
-            selectedFileName = selectedFile.getAbsolutePath();
-            selectedImageName = selectedFile.getName();
+        if (selectedPath != null) {
+            selectedFileName = selectedPath.getAbsolutePath();
+            selectedImageName = selectedPath.getName();
             selectedFileText.setText(selectedFileName);
         } else {
             System.out.println("File not valid!");
         }
+    }
+
+    public void chooseInputFolder() {
+        DirectoryChooser fileChooser = new DirectoryChooser();
+        File defaultDirectory = new File("c:/");
+        fileChooser.setInitialDirectory(defaultDirectory);
+
+        File selectedDirectory = fileChooser.showDialog(null);
+        selectedFileText.setText(selectedDirectory.getAbsolutePath());
     }
 
     public void chooseOutputFiles(ActionEvent event) {
@@ -233,30 +254,13 @@ public class ImageTransformationController implements Initializable{
         return textField.getText().trim().isEmpty() ? textField.getPromptText() : textField.getText();
     }
 
-    /*public void pythonTest() {
-
-        ProcessBuilder pythonBuilder = new ProcessBuilder();
-        String[] pythonCommands =  {"python", "\"C:\\Users\\Cem Atalay\\Desktop\\Cem Code\\gabordemonstration.py\""};
-
-        pythonBuilder.command(pythonCommands);
-        pythonBuilder.directory(new File(path));
-        pythonBuilder.redirectErrorStream(true);
-
-        try{
-            Process p = pythonBuilder.start();
-
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-    }*/
-
     public void analysisTest() {
 
         ProcessBuilder pythonBuilder = new ProcessBuilder();
         String[] pythonCommands =  {"python", "\"C:\\Users\\Cem Atalay\\Desktop\\Cem Code\\like_unlike.py\""};
 
         pythonBuilder.command(pythonCommands);
-        pythonBuilder.directory(new File(path));
+        pythonBuilder.directory(new File(defaultPath));
         pythonBuilder.redirectErrorStream(true);
 
         try{
@@ -267,22 +271,14 @@ public class ImageTransformationController implements Initializable{
         }
     }
 
-    public void runPythonTransform() {
-
-        ProcessBuilder pythonBuilder = new ProcessBuilder();
-
-        String gaborThr = checkEmptyField(gaborThresholdField);
-
-        ArrayList<String[]> transformCommands = new ArrayList<>();
-
-        String pathToImage = selectedFileText.getText();
+    public void addToTransformCommands(String pathToImage, ArrayList<String[]> transformCommands) {
 
         if(dbBox.isSelected()) {
             String dbLvl = checkEmptyField(dbLevelField);
             String dbDeg = checkEmptyField(dbDegreeField);
 
             String[] transformCommand = {"python", "\"C:\\Users\\Cem Atalay\\Desktop\\Cem Code\\real_wavelet.py\"",
-            "db" + dbDeg, dbLvl, pathToImage};
+                    "db" + dbDeg, dbLvl, pathToImage};
 
             transformCommands.add(transformCommand);
         }
@@ -291,7 +287,7 @@ public class ImageTransformationController implements Initializable{
             String haarLvl = checkEmptyField(haarLevelField);
 
             String[] transformcommand = {"python", "\"C:\\Users\\Cem Atalay\\Desktop\\Cem Code\\real_wavelet.py\"",
-            "haar", haarLvl, pathToImage};
+                    "haar", haarLvl, pathToImage};
 
             transformCommands.add(transformcommand);
         }
@@ -303,10 +299,32 @@ public class ImageTransformationController implements Initializable{
 
             transformCommands.add(transformcommand);
         }
+    }
+
+    public void runPythonTransform() throws IOException {
+
+        ProcessBuilder pythonBuilder = new ProcessBuilder();
+
+        String gaborThr = checkEmptyField(gaborThresholdField);
+
+        ArrayList<String[]> transformCommands = new ArrayList<>();
+
+        String pathToImage = selectedFileText.getText();
+        File file = new File(pathToImage);
+
+        if(file.isDirectory()) {
+            List<Path> paths;
+            try (Stream<Path> walk = Files.walk(Path.of(pathToImage))) {
+                paths = walk.filter(Files::isRegularFile).collect(Collectors.toList());
+            }
+            paths.forEach(x -> addToTransformCommands(x.toString(), transformCommands));
+        } else {
+            addToTransformCommands(pathToImage, transformCommands);
+        }
 
         for (String[] command : transformCommands) {
             pythonBuilder.command(command);
-            pythonBuilder.directory(new File(path));
+            pythonBuilder.directory(new File(defaultPath));
             pythonBuilder.redirectErrorStream(true);
 
             try{
@@ -322,7 +340,7 @@ public class ImageTransformationController implements Initializable{
     public void runOctaveTransform() {
 
         builder.command(commands);
-        builder.directory(new File(path));
+        builder.directory(new File(defaultPath));
         builder.redirectErrorStream(true);
 
         String gaborLevel = checkEmptyField(gaborThresholdField);

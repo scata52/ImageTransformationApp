@@ -24,12 +24,12 @@
             <Font size="18.0" />
          </font>
       </Label>
-      <Button fx:id="chooseInputFileBTN" alignment="CENTER" contentDisplay="CENTER" layoutX="247.0" layoutY="43.0" mnemonicParsing="false" onAction="#chooseInputFiles" text="Choose File">
+      <Button fx:id="chooseInputFileBTN" alignment="CENTER" contentDisplay="CENTER" layoutX="279.0" layoutY="43.0" mnemonicParsing="false" onAction="#chooseInputFiles" prefHeight="25.0" prefWidth="93.0" text="Choose File">
          <tooltip>
             <Tooltip text="Choose an image or a file of images to be transformed and analyzed. " />
          </tooltip>
       </Button>
-      <Button fx:id="chooseOutputFileBTN" layoutX="247.0" layoutY="710.0" mnemonicParsing="false" onAction="#chooseOutputFiles" text="Choose File">
+      <Button fx:id="chooseOutputFileBTN" layoutX="247.0" layoutY="710.0" mnemonicParsing="false" onAction="#chooseOutputFiles" prefHeight="25.0" prefWidth="93.0" text="Choose Folder">
          <tooltip>
             <Tooltip text="Choose where you want the transformed files to be stored." />
          </tooltip>
@@ -86,7 +86,7 @@
             <Font size="15.0" />
          </font>
       </CheckBox>
-      <CheckBox fx:id="splineBox" layoutX="55.0" layoutY="310.0" mnemonicParsing="false" text="B-Spline  Wavelet">
+      <CheckBox fx:id="splineBox" layoutX="55.0" layoutY="310.0" mnemonicParsing="false" text="B-Spline Wavelet">
          <font>
             <Font size="15.0" />
          </font>
@@ -103,21 +103,21 @@
          <tooltip>
             <Tooltip text="If no value is given, grey values will be used." />
          </tooltip></TextField>
-      <Label layoutX="378.0" layoutY="265.0" text="Deg:">
+      <Label layoutX="413.0" layoutY="265.0" text="Deg:">
          <tooltip>
             <Tooltip text="Degree" />
          </tooltip>
       </Label>
-      <Label layoutX="378.0" layoutY="312.0" text="Deg:">
+      <Label layoutX="413.0" layoutY="312.0" text="Deg:">
          <tooltip>
             <Tooltip text="Degree" />
          </tooltip>
       </Label>
-      <TextField fx:id="dbDegreeField" layoutX="413.0" layoutY="261.0" prefHeight="25.0" prefWidth="69.0">
+      <TextField fx:id="dbDegreeField" layoutX="448.0" layoutY="261.0" prefHeight="25.0" prefWidth="69.0">
          <tooltip>
             <Tooltip text="If no value is given, grey values will be used." />
          </tooltip></TextField>
-      <TextField fx:id="splineDegreeField" layoutX="413.0" layoutY="308.0" prefHeight="25.0" prefWidth="69.0">
+      <TextField fx:id="splineDegreeField" layoutX="448.0" layoutY="308.0" prefHeight="25.0" prefWidth="69.0">
          <tooltip>
             <Tooltip text="If no value is given, grey values will be used." />
          </tooltip></TextField>
@@ -145,7 +145,7 @@
             </Tooltip>
          </tooltip>
       </Button>
-      <Button layoutX="532.0" layoutY="211.0" mnemonicParsing="false" prefHeight="25.0" prefWidth="77.0" text="Default">
+      <Button layoutX="577.0" layoutY="211.0" mnemonicParsing="false" prefHeight="25.0" prefWidth="77.0" text="Default">
          <tooltip>
             <Tooltip text="Set the parameters for the selected transformation type and the desired analyses.">
                <font>
@@ -154,7 +154,7 @@
             </Tooltip>
          </tooltip>
       </Button>
-      <Button layoutX="532.0" layoutY="158.0" mnemonicParsing="false" prefHeight="25.0" prefWidth="77.0" text="Default">
+      <Button layoutX="577.0" layoutY="158.0" mnemonicParsing="false" prefHeight="25.0" prefWidth="77.0" text="Default">
          <tooltip>
             <Tooltip text="Set the parameters for the selected transformation type and the desired analyses.">
                <font>
@@ -163,7 +163,7 @@
             </Tooltip>
          </tooltip>
       </Button>
-      <Button layoutX="532.0" layoutY="308.0" mnemonicParsing="false" prefHeight="25.0" prefWidth="77.0" text="Default">
+      <Button layoutX="577.0" layoutY="308.0" mnemonicParsing="false" prefHeight="25.0" prefWidth="77.0" text="Default">
          <tooltip>
             <Tooltip text="Set the parameters for the selected transformation type and the desired analyses.">
                <font>
@@ -231,7 +231,7 @@
             <Tooltip text="If no value is given, grey values will be used." />
          </tooltip>
       </TextField>
-      <Button layoutX="532.0" layoutY="261.0" mnemonicParsing="false" prefHeight="25.0" prefWidth="77.0" text="Default">
+      <Button layoutX="577.0" layoutY="261.0" mnemonicParsing="false" prefHeight="25.0" prefWidth="77.0" text="Default">
          <tooltip>
             <Tooltip text="Set the parameters for the selected transformation type and the desired analyses.">
                <font>
@@ -240,5 +240,6 @@
             </Tooltip>
          </tooltip>
       </Button>
+      <Button fx:id="chooseInputFolderBTN" layoutX="158.0" layoutY="43.0" mnemonicParsing="false" onAction="#chooseInputFolder" prefHeight="25.0" prefWidth="93.0" text="Choose Folder" />
    </children>
 </AnchorPane>
