@@ -45,7 +45,10 @@ public class ImageTransformationController implements Initializable{
     private TextArea outputFolderText;
 
     @FXML
-    private TextField gaborThresholdField;
+    private TextField gaborWLField;
+
+    @FXML
+    private TextField gaborOrientField;
 
     @FXML
     private TextField dbLevelField;
@@ -165,7 +168,8 @@ public class ImageTransformationController implements Initializable{
     }*/
 
     void setDefaults() {
-        gaborThresholdField.setPromptText("40");
+        gaborWLField.setPromptText("6");
+        gaborOrientField.setPromptText("45");
         dbDegreeField.setPromptText("4");
         dbLevelField.setPromptText("1");
         splineDegreeField.setPromptText("3");
@@ -271,14 +275,23 @@ public class ImageTransformationController implements Initializable{
         }
     }
 
-    public void addToTransformCommands(String pathToImage, ArrayList<String[]> transformCommands) {
+    public void addToTransformCommands(String pathToImage, ArrayList<String[]> transformCommands, Boolean display) {
+
+        String boolString;
+
+        if(display){
+            boolString = "True";
+        } else {
+            boolString = "False";
+        }
+
 
         if(dbBox.isSelected()) {
             String dbLvl = checkEmptyField(dbLevelField);
             String dbDeg = checkEmptyField(dbDegreeField);
 
             String[] transformCommand = {"python", "\"C:\\Users\\Cem Atalay\\Desktop\\Cem Code\\real_wavelet.py\"",
-                    "db" + dbDeg, dbLvl, pathToImage};
+                    "db" + dbDeg, dbLvl, pathToImage, boolString};
 
             transformCommands.add(transformCommand);
         }
@@ -287,15 +300,18 @@ public class ImageTransformationController implements Initializable{
             String haarLvl = checkEmptyField(haarLevelField);
 
             String[] transformcommand = {"python", "\"C:\\Users\\Cem Atalay\\Desktop\\Cem Code\\real_wavelet.py\"",
-                    "haar", haarLvl, pathToImage};
+                    "haar", haarLvl, pathToImage, boolString};
 
             transformCommands.add(transformcommand);
         }
 
         if(gaborBox.isSelected()) {
 
+            String gaborWL = checkEmptyField(gaborWLField);
+            String gaborOrient = checkEmptyField(gaborOrientField);
+
             String[] transformcommand = {"python",
-                    "\"C:\\Users\\Cem Atalay\\Desktop\\Cem Code\\real_gabor.py\"", pathToImage};
+                    "\"C:\\Users\\Cem Atalay\\Desktop\\Cem Code\\real_gabor.py\"", pathToImage, gaborWL, gaborOrient, boolString};
 
             transformCommands.add(transformcommand);
         }
@@ -304,8 +320,6 @@ public class ImageTransformationController implements Initializable{
     public void runPythonTransform() throws IOException {
 
         ProcessBuilder pythonBuilder = new ProcessBuilder();
-
-        String gaborThr = checkEmptyField(gaborThresholdField);
 
         ArrayList<String[]> transformCommands = new ArrayList<>();
 
@@ -317,9 +331,11 @@ public class ImageTransformationController implements Initializable{
             try (Stream<Path> walk = Files.walk(Path.of(pathToImage))) {
                 paths = walk.filter(Files::isRegularFile).collect(Collectors.toList());
             }
-            paths.forEach(x -> addToTransformCommands(x.toString(), transformCommands));
+            Path firstImage = paths.get(0);
+            addToTransformCommands(firstImage.toString(), transformCommands, true); // WIP
+            paths.forEach(x -> addToTransformCommands(x.toString(), transformCommands, false));
         } else {
-            addToTransformCommands(pathToImage, transformCommands);
+            addToTransformCommands(pathToImage, transformCommands, true);
         }
 
         for (String[] command : transformCommands) {
@@ -343,7 +359,7 @@ public class ImageTransformationController implements Initializable{
         builder.directory(new File(defaultPath));
         builder.redirectErrorStream(true);
 
-        String gaborLevel = checkEmptyField(gaborThresholdField);
+        String gaborLevel = checkEmptyField(gaborWLField);
         String dbLevel = checkEmptyField(dbLevelField);
         String splineLevel = checkEmptyField(splineLevelField);
         String dbDegree = checkEmptyField(dbDegreeField);
@@ -364,15 +380,6 @@ public class ImageTransformationController implements Initializable{
             if(checkValidParameters("spline", splineDegree, splineLevel)) {return;}
             transformCommands.put("spline" + splineDegree, splineLevel);
         }
-
-        /*String tSize = tTypeSizeField.getText();
-        String tTypeCommand = tTypeToCommand(selectedTransformationType);
-        String tLevel = tTypeLevelField.getText();
-
-        if(checkValidParameters(tTypeCommand, tSize, tLevel)) {return;}
-
-        tSize = adaptSizeToType(selectedTransformationType,tTypeSizeField.getText());
-        String tType = tTypeCommand + tSize;*/
 
         Platform.runLater(this::changeButtonText);
 

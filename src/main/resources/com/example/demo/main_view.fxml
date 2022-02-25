@@ -26,7 +26,7 @@
       </Label>
       <Button fx:id="chooseInputFileBTN" alignment="CENTER" contentDisplay="CENTER" layoutX="279.0" layoutY="43.0" mnemonicParsing="false" onAction="#chooseInputFiles" prefHeight="25.0" prefWidth="93.0" text="Choose File">
          <tooltip>
-            <Tooltip text="Choose an image or a file of images to be transformed and analyzed. " />
+            <Tooltip text="Choose an image to be transformed and analyzed. " />
          </tooltip>
       </Button>
       <Button fx:id="chooseOutputFileBTN" layoutX="247.0" layoutY="710.0" mnemonicParsing="false" onAction="#chooseOutputFiles" prefHeight="25.0" prefWidth="93.0" text="Choose Folder">
@@ -91,7 +91,7 @@
             <Font size="15.0" />
          </font>
       </CheckBox>
-      <TextField fx:id="gaborThresholdField" layoutX="283.0" layoutY="157.0" prefHeight="25.0" prefWidth="69.0">
+      <TextField fx:id="gaborWLField" layoutX="283.0" layoutY="157.0" prefHeight="25.0" prefWidth="69.0">
          <tooltip>
             <Tooltip text="If no value is given, grey values will be used." />
          </tooltip></TextField>
@@ -131,9 +131,9 @@
             <Tooltip text="Level" />
          </tooltip>
       </Label>
-      <Label layoutX="246.0" layoutY="161.0" text="Thr:">
+      <Label layoutX="246.0" layoutY="161.0" text="WL:">
          <tooltip>
-            <Tooltip text="Threshold" />
+            <Tooltip text="Wavelength" />
          </tooltip>
       </Label>
       <Button fx:id="useTTypeDValuesBTN" layoutX="286.0" layoutY="357.0" mnemonicParsing="false" prefHeight="25.0" prefWidth="157.0" text="Use Default Values For All">
@@ -240,6 +240,19 @@
             </Tooltip>
          </tooltip>
       </Button>
-      <Button fx:id="chooseInputFolderBTN" layoutX="158.0" layoutY="43.0" mnemonicParsing="false" onAction="#chooseInputFolder" prefHeight="25.0" prefWidth="93.0" text="Choose Folder" />
+      <Button fx:id="chooseInputFolderBTN" layoutX="158.0" layoutY="43.0" mnemonicParsing="false" onAction="#chooseInputFolder" prefHeight="25.0" prefWidth="93.0" text="Choose Folder">
+         <tooltip>
+            <Tooltip text="Choose a folder of images to be transformed and analyzed. " />
+         </tooltip></Button>
+      <TextField fx:id="gaborOrientField" layoutX="448.0" layoutY="158.0" prefHeight="25.0" prefWidth="69.0">
+         <tooltip>
+            <Tooltip text="If no value is given, grey values will be used." />
+         </tooltip>
+      </TextField>
+      <Label layoutX="401.0" layoutY="162.0" prefHeight="17.0" prefWidth="49.0" text="Orient:">
+         <tooltip>
+            <Tooltip text="Orientation" />
+         </tooltip>
+      </Label>
    </children>
 </AnchorPane>
