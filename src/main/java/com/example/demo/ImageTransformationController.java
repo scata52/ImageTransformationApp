@@ -27,9 +27,6 @@ public class ImageTransformationController implements Initializable{
     private Button transformBTN;
 
     @FXML
-    private Button pTestButton;
-
-    @FXML
     private Button likeUnlikeTestButton;
 
     @FXML
@@ -39,7 +36,19 @@ public class ImageTransformationController implements Initializable{
     private Button chooseInputFolderBTN;
 
     @FXML
+    private Button series1BTN;
+
+    @FXML
+    private Button series2BTN;
+
+    @FXML
     private TextArea selectedFileText;
+
+    @FXML
+    private TextArea series1Text;
+
+    @FXML
+    private TextArea series2Text;
 
     @FXML
     private TextArea outputFolderText;
@@ -86,10 +95,6 @@ public class ImageTransformationController implements Initializable{
     @FXML
     private TextField randomnessField;
 
-    private String selectedFileName;
-
-    private File selectedPath;
-
     private String selectedImageName;
 
     private BufferedWriter writer;
@@ -120,10 +125,10 @@ public class ImageTransformationController implements Initializable{
 
     public void chooseInputFiles(ActionEvent event) {
         FileChooser fileChooser = new FileChooser();
-        selectedPath = fileChooser.showOpenDialog(null);
+        File selectedPath = fileChooser.showOpenDialog(null);
 
         if (selectedPath != null) {
-            selectedFileName = selectedPath.getAbsolutePath();
+            String selectedFileName = selectedPath.getAbsolutePath();
             selectedImageName = selectedPath.getName();
             selectedFileText.setText(selectedFileName);
         } else {
@@ -138,6 +143,24 @@ public class ImageTransformationController implements Initializable{
 
         File selectedDirectory = fileChooser.showDialog(null);
         selectedFileText.setText(selectedDirectory.getAbsolutePath());
+    }
+
+    public void chooseSeries1() {
+        DirectoryChooser fileChooser = new DirectoryChooser();
+        File defaultDirectory = new File("c:/");
+        fileChooser.setInitialDirectory(defaultDirectory);
+
+        File selectedDirectory = fileChooser.showDialog(null);
+        series1Text.setText(selectedDirectory.getAbsolutePath());
+    }
+
+    public void chooseSeries2() {
+        DirectoryChooser fileChooser = new DirectoryChooser();
+        File defaultDirectory = new File("c:/");
+        fileChooser.setInitialDirectory(defaultDirectory);
+
+        File selectedDirectory = fileChooser.showDialog(null);
+        series2Text.setText(selectedDirectory.getAbsolutePath());
     }
 
     public void chooseOutputFiles(ActionEvent event) {
@@ -158,14 +181,6 @@ public class ImageTransformationController implements Initializable{
             default -> "gabor";
         };
     }
-
-    /*public String adaptSizeToType(String tType, String tSize) {
-        return switch (tType) {
-            case "B-spline wavelet" -> tSize + ":" + tSize;
-            case "Daubechies wavelet" -> tSize;
-            default -> "";
-        };
-    }*/
 
     void setDefaults() {
         gaborWLField.setPromptText("6");
@@ -248,7 +263,7 @@ public class ImageTransformationController implements Initializable{
 
     public void changeButtonText() {
         if(Objects.equals(transformBTN.getText(), "Processing")) {
-            transformBTN.setText("Transform");
+            transformBTN.setText("Apply Transformations");
         } else {
             transformBTN.setText("Processing");
         }
@@ -258,22 +273,6 @@ public class ImageTransformationController implements Initializable{
         return textField.getText().trim().isEmpty() ? textField.getPromptText() : textField.getText();
     }
 
-    public void analysisTest() {
-
-        ProcessBuilder pythonBuilder = new ProcessBuilder();
-        String[] pythonCommands =  {"python", "\"C:\\Users\\Cem Atalay\\Desktop\\Cem Code\\like_unlike.py\""};
-
-        pythonBuilder.command(pythonCommands);
-        pythonBuilder.directory(new File(defaultPath));
-        pythonBuilder.redirectErrorStream(true);
-
-        try{
-            Process p = pythonBuilder.start();
-
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-    }
 
     public void addToTransformCommands(String pathToImage, ArrayList<String[]> transformCommands, Boolean display) {
 
@@ -317,7 +316,29 @@ public class ImageTransformationController implements Initializable{
         }
     }
 
+    public void analysisTest() {
+
+        String series1 = series1Text.getText();
+        String series2 = series2Text.getText();
+
+        ProcessBuilder pythonBuilder = new ProcessBuilder();
+        String[] pythonCommands =  {"python", "\"C:\\Users\\Cem Atalay\\Desktop\\Cem Code\\like_unlike.py\"", series1, series2};
+
+        pythonBuilder.command(pythonCommands);
+        pythonBuilder.directory(new File(defaultPath));
+        pythonBuilder.redirectErrorStream(true);
+
+        try{
+            Process p = pythonBuilder.start();
+
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
     public void runPythonTransform() throws IOException {
+
+        Platform.runLater(this::changeButtonText);
 
         ProcessBuilder pythonBuilder = new ProcessBuilder();
 
@@ -351,37 +372,28 @@ public class ImageTransformationController implements Initializable{
             }
         }
 
+        Platform.runLater(this::changeButtonText);
+
     }
 
     public void runOctaveTransform() {
+
+        Platform.runLater(this::changeButtonText);
 
         builder.command(commands);
         builder.directory(new File(defaultPath));
         builder.redirectErrorStream(true);
 
-        String gaborLevel = checkEmptyField(gaborWLField);
-        String dbLevel = checkEmptyField(dbLevelField);
         String splineLevel = checkEmptyField(splineLevelField);
-        String dbDegree = checkEmptyField(dbDegreeField);
         String temp = checkEmptyField(splineDegreeField);
         String splineDegree = temp + ":" + temp;
 
         HashMap<String, String> transformCommands = new HashMap<>();
 
-        if(gaborBox.isSelected()) {
-            if(checkValidParameters("gabor", "", gaborLevel)) {return;}
-            transformCommands.put("gabor", gaborLevel);
-        }
-        if(dbBox.isSelected()) {
-            if(checkValidParameters("db", dbDegree, dbLevel)) {return;}
-            transformCommands.put("db" + dbDegree, dbLevel);
-        }
         if(splineBox.isSelected()) {
             if(checkValidParameters("spline", splineDegree, splineLevel)) {return;}
             transformCommands.put("spline" + splineDegree, splineLevel);
         }
-
-        Platform.runLater(this::changeButtonText);
 
         Process process;
 
@@ -413,15 +425,28 @@ public class ImageTransformationController implements Initializable{
         }
 
         Platform.runLater(this::changeButtonText);
+
+
     }
 
     public void startTransform(ActionEvent event) throws IOException {
 
-        Runnable transformation = this::runOctaveTransform;
 
-        Thread backgroundThread = new Thread(transformation);
-        backgroundThread.setDaemon(true);
-        backgroundThread.start();
+
+        if(splineBox.isSelected()) {
+
+            Runnable transformation = this::runOctaveTransform;
+
+            Thread backgroundThread = new Thread(transformation);
+            backgroundThread.setDaemon(true);
+            backgroundThread.start();
+
+        }
+
+        if(gaborBox.isSelected() || dbBox.isSelected() || haarBox.isSelected()) {
+            runPythonTransform(); // WIP runnable
+        }
+
 
     }
 
