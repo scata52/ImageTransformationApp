@@ -35,20 +35,20 @@ public class ImageTransformationController implements Initializable{
     @FXML
     private Button chooseInputFolderBTN;
 
-    @FXML
+    /*@FXML
     private Button series1BTN;
 
     @FXML
-    private Button series2BTN;
+    private Button series2BTN;*/
 
     @FXML
     private TextArea selectedFileText;
 
-    @FXML
+    /*@FXML
     private TextArea series1Text;
 
     @FXML
-    private TextArea series2Text;
+    private TextArea series2Text;*/
 
     @FXML
     private TextArea outputFolderText;
@@ -100,7 +100,7 @@ public class ImageTransformationController implements Initializable{
     private BufferedWriter writer;
     private final ProcessBuilder builder = new ProcessBuilder();
 
-    private String defaultPath = "C:\\Users\\Cem Atalay\\Desktop\\Cem Code";
+    private String defaultPath = "C:\\Users\\Cem Atalay\\Desktop\\Cem Code\\";
 
     private final String[] transformationTypes = {"Gabor Transformation", "Daubechies wavelet", "B-spline wavelet", "Apply All"};
     private final String[] commands = {"octave-cli"};
@@ -145,7 +145,7 @@ public class ImageTransformationController implements Initializable{
         selectedFileText.setText(selectedDirectory.getAbsolutePath());
     }
 
-    public void chooseSeries1() {
+    /*public void chooseSeries1() {
         DirectoryChooser fileChooser = new DirectoryChooser();
         File defaultDirectory = new File("c:/");
         fileChooser.setInitialDirectory(defaultDirectory);
@@ -161,7 +161,7 @@ public class ImageTransformationController implements Initializable{
 
         File selectedDirectory = fileChooser.showDialog(null);
         series2Text.setText(selectedDirectory.getAbsolutePath());
-    }
+    }*/
 
     public void chooseOutputFiles(ActionEvent event) {
         DirectoryChooser fileChooser = new DirectoryChooser();
@@ -173,14 +173,14 @@ public class ImageTransformationController implements Initializable{
 
     }
 
-    public String tTypeToCommand(String tType) {
+    /*public String tTypeToCommand(String tType) {
         return switch (tType) {
             case "Daubechies wavelet" -> "db";
             case "B-spline wavelet" -> "spline";
             case "Apply all" -> "all";
             default -> "gabor";
         };
-    }
+    }*/
 
     void setDefaults() {
         gaborWLField.setPromptText("6");
@@ -261,11 +261,25 @@ public class ImageTransformationController implements Initializable{
         }
     }
 
-    public void changeButtonText() {
-        if(Objects.equals(transformBTN.getText(), "Processing")) {
-            transformBTN.setText("Apply Transformations");
+    public void changeButtonText(Button button) {
+        String mainText = "Apply Transformations";
+        String procText = "Processing";
+
+        if (Objects.equals(button.getText(), mainText)) {
+            button.setText(procText);
         } else {
-            transformBTN.setText("Processing");
+            button.setText(mainText);
+        }
+    }
+
+    public void changeAnalysisButtonText() {
+        String mainText = "Analyse Images";
+        String procText = "Processing";
+
+        if (Objects.equals(likeUnlikeTestButton.getText(), mainText)) {
+            likeUnlikeTestButton.setText(procText);
+        } else {
+            likeUnlikeTestButton.setText(mainText);
         }
     }
 
@@ -277,6 +291,7 @@ public class ImageTransformationController implements Initializable{
     public void addToTransformCommands(String pathToImage, ArrayList<String[]> transformCommands, Boolean display) {
 
         String boolString;
+        String gaborString = "\"C:\\Users\\Cem Atalay\\Desktop\\Cem Code\\real_gabor.py\"";
 
         if(display){
             boolString = "True";
@@ -310,19 +325,20 @@ public class ImageTransformationController implements Initializable{
             String gaborOrient = checkEmptyField(gaborOrientField);
 
             String[] transformcommand = {"python",
-                    "\"C:\\Users\\Cem Atalay\\Desktop\\Cem Code\\real_gabor.py\"", pathToImage, gaborWL, gaborOrient, boolString};
+                    gaborString, pathToImage, gaborWL, gaborOrient, boolString};
 
             transformCommands.add(transformcommand);
         }
     }
 
     public void analysisTest() {
+        //Platform.runLater(this::changeAnalysisButtonText);
 
-        String series1 = series1Text.getText();
-        String series2 = series2Text.getText();
+        //String pathToImage = selectedFileText.getText();
+        //File[] series = new File(pathToImage).listFiles(File::isDirectory);
 
         ProcessBuilder pythonBuilder = new ProcessBuilder();
-        String[] pythonCommands =  {"python", "\"C:\\Users\\Cem Atalay\\Desktop\\Cem Code\\like_unlike.py\"", series1, series2};
+        String[] pythonCommands =  {"python", "\"C:\\Users\\Cem Atalay\\Desktop\\Cem Code\\win_like_unlike.py\""};
 
         pythonBuilder.command(pythonCommands);
         pythonBuilder.directory(new File(defaultPath));
@@ -330,15 +346,23 @@ public class ImageTransformationController implements Initializable{
 
         try{
             Process p = pythonBuilder.start();
+            BufferedReader br = new BufferedReader(new InputStreamReader(p.getInputStream()));
+
+            String line;
+            while ((line = br.readLine()) != null)
+            {
+                System.out.println(line);
+            }
+            //p.waitFor();
+            //Platform.runLater(this::changeAnalysisButtonText);
 
         } catch (IOException e) {
             e.printStackTrace();
         }
+
     }
 
     public void runPythonTransform() throws IOException {
-
-        Platform.runLater(this::changeButtonText);
 
         ProcessBuilder pythonBuilder = new ProcessBuilder();
 
@@ -372,13 +396,9 @@ public class ImageTransformationController implements Initializable{
             }
         }
 
-        Platform.runLater(this::changeButtonText);
-
     }
 
     public void runOctaveTransform() {
-
-        Platform.runLater(this::changeButtonText);
 
         builder.command(commands);
         builder.directory(new File(defaultPath));
@@ -424,22 +444,23 @@ public class ImageTransformationController implements Initializable{
             e.printStackTrace();
         }
 
-        Platform.runLater(this::changeButtonText);
-
 
     }
 
     public void startTransform(ActionEvent event) throws IOException {
 
+        /*Runnable analysis = this::analysisTest;
 
-
+        Thread backgroundAnalysisTest = new Thread(analysis);
+        backgroundAnalysisTest.setDaemon(true);
+        backgroundAnalysisTest.start();
+*/
         if(splineBox.isSelected()) {
-
             Runnable transformation = this::runOctaveTransform;
 
-            Thread backgroundThread = new Thread(transformation);
-            backgroundThread.setDaemon(true);
-            backgroundThread.start();
+            Thread backgroundOctaveThread = new Thread(transformation);
+            backgroundOctaveThread.setDaemon(true);
+            backgroundOctaveThread.start();
 
         }
 

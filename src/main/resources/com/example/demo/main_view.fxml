@@ -249,9 +249,5 @@
             <Tooltip text="Orientation" />
          </tooltip>
       </Label>
-      <TextArea fx:id="series1Text" layoutX="275.0" layoutY="444.0" prefHeight="38.0" prefWidth="115.0" />
-      <TextArea fx:id="series2Text" layoutX="543.0" layoutY="444.0" prefHeight="38.0" prefWidth="115.0" />
-      <Button fx:id="series1BTN" layoutX="170.0" layoutY="450.0" mnemonicParsing="false" onAction="#chooseSeries1" prefHeight="25.0" prefWidth="69.0" text="Folder 1" />
-      <Button fx:id="series2BTN" layoutX="448.0" layoutY="451.0" mnemonicParsing="false" onAction="#chooseSeries2" prefHeight="25.0" prefWidth="69.0" text="Folder 2" />
    </children>
 </AnchorPane>
