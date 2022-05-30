@@ -95,10 +95,13 @@ public class ImageTransformationController implements Initializable{
     @FXML
     private TextField randomnessField;
 
+    @FXML
+    private ProgressBar progressBar;
+
     private String selectedImageName;
 
     private BufferedWriter writer;
-    private final ProcessBuilder builder = new ProcessBuilder();
+    //private final ProcessBuilder builder = new ProcessBuilder();
 
     private String defaultPath = "C:\\Users\\Cem Atalay\\Desktop\\Cem Code\\";
 
@@ -114,6 +117,14 @@ public class ImageTransformationController implements Initializable{
         stage.show();
     }
 
+    static void launchProgView(Stage stage) throws IOException {
+        Parent root = FXMLLoader.load(Objects.requireNonNull(ImageTransformation.class.getResource(
+                "progress_view.fxml")));
+        Scene scene = new Scene(root);
+        stage.setTitle("Processing");
+        stage.setScene(scene);
+        stage.show();
+    }
 
     public void switchToMainView(ActionEvent event) throws IOException {
         Parent root = FXMLLoader.load(Objects.requireNonNull(ImageTransformation.class.getResource("main_view.fxml")));
@@ -331,11 +342,14 @@ public class ImageTransformationController implements Initializable{
         }
     }
 
-    public void analysisTest() {
+    public void analysisTest() throws IOException {
         //Platform.runLater(this::changeAnalysisButtonText);
 
         //String pathToImage = selectedFileText.getText();
         //File[] series = new File(pathToImage).listFiles(File::isDirectory);
+        //Stage stage = new Stage();
+
+        //launchProgView(stage);
 
         ProcessBuilder pythonBuilder = new ProcessBuilder();
         String[] pythonCommands =  {"python", "\"C:\\Users\\Cem Atalay\\Desktop\\Cem Code\\win_like_unlike.py\""};
@@ -390,15 +404,15 @@ public class ImageTransformationController implements Initializable{
 
             try{
                 Process p = pythonBuilder.start();
-
             } catch (IOException e) {
                 e.printStackTrace();
             }
         }
-
     }
 
     public void runOctaveTransform() {
+
+        ProcessBuilder builder = new ProcessBuilder();
 
         builder.command(commands);
         builder.directory(new File(defaultPath));
@@ -439,12 +453,9 @@ public class ImageTransformationController implements Initializable{
                 System.out.println(line);
             }
 
-
         } catch (IOException e) {
             e.printStackTrace();
         }
-
-
     }
 
     public void startTransform(ActionEvent event) throws IOException {

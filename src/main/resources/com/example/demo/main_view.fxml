@@ -54,7 +54,7 @@
          </font>
       </Button>
       <TextArea fx:id="selectedFileText" layoutX="390.0" layoutY="37.0" prefHeight="37.0" prefWidth="301.0" />
-      <TextField fx:id="entropyField" layoutX="221.0" layoutY="506.0" prefHeight="25.0" prefWidth="69.0">
+      <TextField fx:id="entropyField" layoutX="283.0" layoutY="506.0" prefHeight="25.0" prefWidth="69.0">
          <tooltip>
             <Tooltip text="If no value is given, grey values will be used." />
          </tooltip></TextField>
@@ -155,11 +155,7 @@
             </Tooltip>
          </tooltip>
       </Button>
-      <TextField layoutX="348.0" layoutY="506.0" prefHeight="25.0" prefWidth="69.0">
-         <tooltip>
-            <Tooltip text="If no value is given, grey values will be used." />
-         </tooltip></TextField>
-      <TextField layoutX="474.0" layoutY="506.0" prefHeight="25.0" prefWidth="69.0">
+      <TextField layoutX="448.0" layoutY="506.0" prefHeight="25.0" prefWidth="69.0">
          <tooltip>
             <Tooltip text="If no value is given, grey values will be used." />
          </tooltip></TextField>
@@ -213,6 +209,16 @@
       <Label layoutX="401.0" layoutY="162.0" prefHeight="17.0" prefWidth="49.0" text="Orient:">
          <tooltip>
             <Tooltip text="Orientation" />
+         </tooltip>
+      </Label>
+      <Label layoutX="413.0" layoutY="510.0" text="Deg:">
+         <tooltip>
+            <Tooltip text="Degree" />
+         </tooltip>
+      </Label>
+      <Label layoutX="248.0" layoutY="510.0" text="Lvl:">
+         <tooltip>
+            <Tooltip text="Level" />
          </tooltip>
       </Label>
    </children>
