@@ -168,7 +168,7 @@
             </Tooltip>
          </tooltip>
       </Button>
-      <Button fx:id="likeUnlikeTestButton" layoutX="493.0" layoutY="686.0" mnemonicParsing="false" onAction="#analysisTest" prefHeight="35.0" prefWidth="123.0" text="Analyse Images">
+      <Button fx:id="likeUnlikeTestButton" layoutX="493.0" layoutY="686.0" mnemonicParsing="false" onAction="#runAnalysis" prefHeight="35.0" prefWidth="123.0" text="Analyse Images">
          <font>
             <Font size="15.0" />
          </font>

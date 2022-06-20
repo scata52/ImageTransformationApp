@@ -35,20 +35,8 @@ public class ImageTransformationController implements Initializable{
     @FXML
     private Button chooseInputFolderBTN;
 
-    /*@FXML
-    private Button series1BTN;
-
-    @FXML
-    private Button series2BTN;*/
-
     @FXML
     private TextArea selectedFileText;
-
-    /*@FXML
-    private TextArea series1Text;
-
-    @FXML
-    private TextArea series2Text;*/
 
     @FXML
     private TextArea outputFolderText;
@@ -87,26 +75,19 @@ public class ImageTransformationController implements Initializable{
     private CheckBox splineBox;
 
     @FXML
-    private TextField entropyField;
-
-    @FXML
-    private TextField stabilityField;
-
-    @FXML
-    private TextField randomnessField;
-
-    @FXML
     private ProgressBar progressBar;
 
     private String selectedImageName;
 
     private BufferedWriter writer;
-    //private final ProcessBuilder builder = new ProcessBuilder();
 
     private String defaultPath = "C:\\Users\\Cem Atalay\\Desktop\\Cem Code\\";
 
-    private final String[] transformationTypes = {"Gabor Transformation", "Daubechies wavelet", "B-spline wavelet", "Apply All"};
     private final String[] commands = {"octave-cli"};
+    private final String gaborPath = "\"C:\\Users\\Cem Atalay\\Desktop\\Cem Code\\real_gabor.py\"";
+    private final String pythonString = "python";
+    private final String waveletPath = "\"C:\\Users\\Cem Atalay\\Desktop\\Cem Code\\real_wavelet.py\"";
+    private final String analysisPath = "\"C:\\Users\\Cem Atalay\\Desktop\\Cem Code\\win_like_unlike.py\"";
 
     static void launchMainView(Stage stage) throws IOException {
         Parent root = FXMLLoader.load(Objects.requireNonNull(ImageTransformation.class.getResource(
@@ -117,14 +98,14 @@ public class ImageTransformationController implements Initializable{
         stage.show();
     }
 
-    static void launchProgView(Stage stage) throws IOException {
+    /*static void launchProgView(Stage stage) throws IOException {
         Parent root = FXMLLoader.load(Objects.requireNonNull(ImageTransformation.class.getResource(
                 "progress_view.fxml")));
         Scene scene = new Scene(root);
         stage.setTitle("Processing");
         stage.setScene(scene);
         stage.show();
-    }
+    }*/
 
     public void switchToMainView(ActionEvent event) throws IOException {
         Parent root = FXMLLoader.load(Objects.requireNonNull(ImageTransformation.class.getResource("main_view.fxml")));
@@ -156,24 +137,6 @@ public class ImageTransformationController implements Initializable{
         selectedFileText.setText(selectedDirectory.getAbsolutePath());
     }
 
-    /*public void chooseSeries1() {
-        DirectoryChooser fileChooser = new DirectoryChooser();
-        File defaultDirectory = new File("c:/");
-        fileChooser.setInitialDirectory(defaultDirectory);
-
-        File selectedDirectory = fileChooser.showDialog(null);
-        series1Text.setText(selectedDirectory.getAbsolutePath());
-    }
-
-    public void chooseSeries2() {
-        DirectoryChooser fileChooser = new DirectoryChooser();
-        File defaultDirectory = new File("c:/");
-        fileChooser.setInitialDirectory(defaultDirectory);
-
-        File selectedDirectory = fileChooser.showDialog(null);
-        series2Text.setText(selectedDirectory.getAbsolutePath());
-    }*/
-
     public void chooseOutputFiles(ActionEvent event) {
         DirectoryChooser fileChooser = new DirectoryChooser();
         File defaultDirectory = new File("c:/");
@@ -183,15 +146,6 @@ public class ImageTransformationController implements Initializable{
         outputFolderText.setText(selectedDirectory.getAbsolutePath());
 
     }
-
-    /*public String tTypeToCommand(String tType) {
-        return switch (tType) {
-            case "Daubechies wavelet" -> "db";
-            case "B-spline wavelet" -> "spline";
-            case "Apply all" -> "all";
-            default -> "gabor";
-        };
-    }*/
 
     void setDefaults() {
         gaborWLField.setPromptText("6");
@@ -272,7 +226,7 @@ public class ImageTransformationController implements Initializable{
         }
     }
 
-    public void changeButtonText(Button button) {
+    /*public void changeButtonText(Button button) {
         String mainText = "Apply Transformations";
         String procText = "Processing";
 
@@ -281,9 +235,9 @@ public class ImageTransformationController implements Initializable{
         } else {
             button.setText(mainText);
         }
-    }
+    }*/
 
-    public void changeAnalysisButtonText() {
+    /*public void changeAnalysisButtonText() {
         String mainText = "Analyse Images";
         String procText = "Processing";
 
@@ -292,31 +246,20 @@ public class ImageTransformationController implements Initializable{
         } else {
             likeUnlikeTestButton.setText(mainText);
         }
-    }
+    }*/
 
     public String checkEmptyField(TextField textField) {
         return textField.getText().trim().isEmpty() ? textField.getPromptText() : textField.getText();
     }
 
 
-    public void addToTransformCommands(String pathToImage, ArrayList<String[]> transformCommands, Boolean display) {
-
-        String boolString;
-        String gaborString = "\"C:\\Users\\Cem Atalay\\Desktop\\Cem Code\\real_gabor.py\"";
-
-        if(display){
-            boolString = "True";
-        } else {
-            boolString = "False";
-        }
-
+    public void addToTransformCommands(String pathToImage, ArrayList<String[]> transformCommands, String boolString) {
 
         if(dbBox.isSelected()) {
             String dbLvl = checkEmptyField(dbLevelField);
             String dbDeg = checkEmptyField(dbDegreeField);
 
-            String[] transformCommand = {"python", "\"C:\\Users\\Cem Atalay\\Desktop\\Cem Code\\real_wavelet.py\"",
-                    "db" + dbDeg, dbLvl, pathToImage, boolString};
+            String[] transformCommand = {pythonString, waveletPath, "db" + dbDeg, dbLvl, pathToImage, boolString};
 
             transformCommands.add(transformCommand);
         }
@@ -324,8 +267,7 @@ public class ImageTransformationController implements Initializable{
         if(haarBox.isSelected()) {
             String haarLvl = checkEmptyField(haarLevelField);
 
-            String[] transformcommand = {"python", "\"C:\\Users\\Cem Atalay\\Desktop\\Cem Code\\real_wavelet.py\"",
-                    "haar", haarLvl, pathToImage, boolString};
+            String[] transformcommand = {pythonString, waveletPath, "haar", haarLvl, pathToImage, boolString};
 
             transformCommands.add(transformcommand);
         }
@@ -335,24 +277,17 @@ public class ImageTransformationController implements Initializable{
             String gaborWL = checkEmptyField(gaborWLField);
             String gaborOrient = checkEmptyField(gaborOrientField);
 
-            String[] transformcommand = {"python",
-                    gaborString, pathToImage, gaborWL, gaborOrient, boolString};
+            String[] transformcommand = {pythonString,
+                    gaborPath, pathToImage, gaborWL, gaborOrient, boolString};
 
             transformCommands.add(transformcommand);
         }
     }
 
-    public void analysisTest() throws IOException {
-        //Platform.runLater(this::changeAnalysisButtonText);
-
-        //String pathToImage = selectedFileText.getText();
-        //File[] series = new File(pathToImage).listFiles(File::isDirectory);
-        //Stage stage = new Stage();
-
-        //launchProgView(stage);
+    public void runAnalysis() throws IOException {
 
         ProcessBuilder pythonBuilder = new ProcessBuilder();
-        String[] pythonCommands =  {"python", "\"C:\\Users\\Cem Atalay\\Desktop\\Cem Code\\win_like_unlike.py\""};
+        String[] pythonCommands =  {pythonString, analysisPath};
 
         pythonBuilder.command(pythonCommands);
         pythonBuilder.directory(new File(defaultPath));
@@ -367,8 +302,6 @@ public class ImageTransformationController implements Initializable{
             {
                 System.out.println(line);
             }
-            //p.waitFor();
-            //Platform.runLater(this::changeAnalysisButtonText);
 
         } catch (IOException e) {
             e.printStackTrace();
@@ -391,10 +324,10 @@ public class ImageTransformationController implements Initializable{
                 paths = walk.filter(Files::isRegularFile).collect(Collectors.toList());
             }
             Path firstImage = paths.get(0);
-            addToTransformCommands(firstImage.toString(), transformCommands, true); // WIP
-            paths.forEach(x -> addToTransformCommands(x.toString(), transformCommands, false));
+            addToTransformCommands(firstImage.toString(), transformCommands, "True"); // WIP
+            paths.forEach(x -> addToTransformCommands(x.toString(), transformCommands, "False"));
         } else {
-            addToTransformCommands(pathToImage, transformCommands, true);
+            addToTransformCommands(pathToImage, transformCommands, "True");
         }
 
         for (String[] command : transformCommands) {
@@ -460,12 +393,6 @@ public class ImageTransformationController implements Initializable{
 
     public void startTransform(ActionEvent event) throws IOException {
 
-        /*Runnable analysis = this::analysisTest;
-
-        Thread backgroundAnalysisTest = new Thread(analysis);
-        backgroundAnalysisTest.setDaemon(true);
-        backgroundAnalysisTest.start();
-*/
         if(splineBox.isSelected()) {
             Runnable transformation = this::runOctaveTransform;
 
@@ -476,10 +403,8 @@ public class ImageTransformationController implements Initializable{
         }
 
         if(gaborBox.isSelected() || dbBox.isSelected() || haarBox.isSelected()) {
-            runPythonTransform(); // WIP runnable
+            runPythonTransform();
         }
-
-
     }
 
 
@@ -487,6 +412,5 @@ public class ImageTransformationController implements Initializable{
     public void initialize(URL url, ResourceBundle resourceBundle) {
         setDefaults();
     }
-
 
 }
