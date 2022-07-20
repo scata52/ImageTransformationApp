@@ -284,8 +284,7 @@ public class ImageTransformationController implements Initializable{
         }
     }
 
-    public void runAnalysis() throws IOException {
-
+    public void analysis() {
         ProcessBuilder pythonBuilder = new ProcessBuilder();
         String[] pythonCommands =  {pythonString, analysisPath};
 
@@ -306,6 +305,15 @@ public class ImageTransformationController implements Initializable{
         } catch (IOException e) {
             e.printStackTrace();
         }
+    }
+
+    public void runAnalysis() throws IOException {
+
+        Runnable analysis = this::analysis;
+
+        Thread backgroundAnalysisThread = new Thread(analysis);
+        backgroundAnalysisThread.setDaemon(true);
+        backgroundAnalysisThread.start();
 
     }
 
